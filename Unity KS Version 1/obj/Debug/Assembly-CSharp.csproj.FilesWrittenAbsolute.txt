@@ -1,0 +1,17 @@
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEditor.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.Analytics.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.PlaymodeTestsRunner.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.HoloLens.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/UnityEngine.VR.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Mono.Cecil.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Unity.DataContract.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/Temp/bin/Debug/Mono.Cecil.Mdb.dll

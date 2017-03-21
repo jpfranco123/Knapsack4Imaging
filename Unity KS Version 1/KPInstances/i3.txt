@@ -1,0 +1,4 @@
+weights:[2,5,18,10,11,12]
+values:[10,8,13,9,1,4]
+capacity:35
+profit:36
