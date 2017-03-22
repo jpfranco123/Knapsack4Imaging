@@ -1,0 +1,6 @@
+no_items:6
+no_instances:60
+max_weight:25
+min_weight:1
+max_value:25
+min_value:1

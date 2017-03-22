@@ -9,36 +9,22 @@ using Random = UnityEngine.Random;
 // This Script (a component of Game Manager) Initializes the Borad (i.e. screen).
 public class BoardManager : MonoBehaviour {
 
-	//66. Delete Count Class if is not used.
-	[Serializable]
-	public class Count
-	{
-		public int minimum;
-		public int maximum;
-
-		public Count(int min, int max)
-		{
-			minimum=min;
-			maximum=max;
-		}
-	}
-
 	//Resoultion width and Height
-	public int resolutionWidth = 800;
-	public int resolutionHeight = 600;
+	public static int resolutionWidth = 800;
+	public static int resolutionHeight = 600;
 
 	//Number of Columns and rows of the grid (the possible positions of the items).
-	public int columns = 8;
-	public int rows = 6;
+	public static int columns = 8;
+	public static int rows = 6;
+
+	//The item radius. This is used to avoid superposition of items.
+	public static float KSItemRadius = 1.5f;
 
 	//Prefab of the item interface configuration
 	public static GameObject KSItemPrefab;
 
 	//A canvas where all the board is going to be placed
 	private GameObject canvas;
-
-	//The item radius. This is used to avoid superposition of items.
-	public float KSItemRadius = 1.5f;
 
 	//The possible positions of the items;
 	private List <Vector3> gridPositions = new List<Vector3> ();
@@ -76,13 +62,13 @@ public class BoardManager : MonoBehaviour {
 		if (randomYes == 1) {
 			btnLeft.GetComponentInChildren<Text>().text = "No";
 			btnRight.GetComponentInChildren<Text>().text = "Yes";
-			btnLeft.onClick.AddListener(()=>GameManager.changeToNextTrial(2,0));
-			btnRight.onClick.AddListener(()=>GameManager.changeToNextTrial(2,1));
+			btnLeft.onClick.AddListener(()=>GameManager.changeToNextScene(0));
+			btnRight.onClick.AddListener(()=>GameManager.changeToNextScene(1));
 		} else {
 			btnLeft.GetComponentInChildren<Text>().text = "Yes";
 			btnRight.GetComponentInChildren<Text>().text = "No";
-			btnLeft.onClick.AddListener(()=>GameManager.changeToNextTrial(2,1));
-			btnRight.onClick.AddListener(()=>GameManager.changeToNextTrial(2,0));
+			btnLeft.onClick.AddListener(()=>GameManager.changeToNextScene(1));
+			btnRight.onClick.AddListener(()=>GameManager.changeToNextScene(0));
 		}
 	}
 
@@ -91,7 +77,7 @@ public class BoardManager : MonoBehaviour {
 	//2. The weight and value vectors are uploaded
 	//3. The instance prefab is uploaded
 	void setKSInstance(){
-		int randInstance = GameManager.instanceRandomization[GameManager.trial];
+		int randInstance = GameManager.instanceRandomization[GameManager.trial-1];
 
 		Text Quest = GameObject.Find("Question").GetComponent<Text>();
 
@@ -99,7 +85,6 @@ public class BoardManager : MonoBehaviour {
 
 		Quest.text = question;
 
-		//123 Currently saving the new items on KSItems so they are randomized as before
 		//66 Carefull: Make sure that KSItems is erased and started in each trial. Static?
 
 		ws = GameManager.ksinstances [randInstance].weights;
@@ -147,17 +132,17 @@ public class BoardManager : MonoBehaviour {
 				if (gridPositions.Count > 0) {
 					Vector3 randomPosition = RandomPosition ();
 
-					//66: SImplify expression
-					if (objectOverlapsQ (randomPosition)) {
-					
-					} else {
+					if (!objectOverlapsQ (randomPosition)) {
 						generateItem (i, randomPosition);
 						objectPositioned = 1;
-					}
+					} 
+//					else {
+//						generateItem (i, randomPosition);
+//						objectPositioned = 1;
+//					}
 				}
 				else{
-					//66. If not all are able to be located try several times and if still not: Show an error
-					Debug.Log ("Not enough space to place all items");
+					//Debug.Log ("Not enough space to place all items");
 					return false;
 				}
 			}
@@ -167,14 +152,37 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//Macro function that initializes the Board
-	public void SetupScene()
+	public void SetupScene(int sceneToSetup)
 	{
-		InitialiseList();
-		RandomizeButtons ();
-		setKSInstance ();
+		if (sceneToSetup == 1) {
+			//InitialiseList();
+			setKSInstance ();
 
-		//66 Generate: if the bool return by the following function is false, then retry again.
-		LayoutObjectAtRandom();
+			//If the bool returned by LayoutObjectAtRandom() is false, then retry again:
+			//Destroy all items. Initialize list again and try to place them once more.
+			int nt=100;
+			bool itemsPlaced = false;
+			while (nt >= 1 && !itemsPlaced) {
+
+				GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+				foreach (GameObject item in items)
+				{
+					Destroy(item);
+				}
+
+				InitialiseList ();
+				itemsPlaced = LayoutObjectAtRandom ();
+				nt--;
+				Debug.Log (nt);
+			}
+			if (itemsPlaced == false) {
+				Debug.Log ("Not enough space to place all items");
+			}
+
+		} else if(sceneToSetup ==2){
+			setKSInstance ();
+			RandomizeButtons ();
+		}
 
 	}
 

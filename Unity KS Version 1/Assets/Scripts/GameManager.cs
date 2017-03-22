@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour {
 	//Current trial initialization
 	public static int trial = 0;
 
+	private static bool showTimer;
+
 
 	//Modifiable Variables:
 	//Interperiod Time
@@ -32,6 +34,9 @@ public class GameManager : MonoBehaviour {
 
 	//Time given for each trial
 	public static float timeTrial=10;
+
+	//Time given for answering
+	public static float timeAnswer=3;
 
 	//Total number of trials
 	private static int numberOfTrials = 30;
@@ -49,9 +54,6 @@ public class GameManager : MonoBehaviour {
 	private static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
 
-
-
-
 	//A structure that contains the parameters of each instance
 	public struct KSInstance
 	{
@@ -64,9 +66,6 @@ public class GameManager : MonoBehaviour {
 
 	//An array of all the instances to be uploaded form .txt files.
 	public static KSInstance[] ksinstances = new KSInstance[numberOfInstances];
-
-
-
 
 	// Use this for initialization
 	void Awake () {
@@ -83,9 +82,6 @@ public class GameManager : MonoBehaviour {
 		//Initializes the game
 		boardScript = GetComponent<BoardManager> ();
 
-		//66: Relocate to to InitGame
-		Scene scene = SceneManager.GetActiveScene();
-		escena = scene.buildIndex;
 		InitGame();
 
 	}
@@ -95,17 +91,29 @@ public class GameManager : MonoBehaviour {
 	//escena = 		0->Setup	1->Trial	2->RestPeriod
 	void InitGame(){
 
+		Scene scene = SceneManager.GetActiveScene();
+		escena = scene.buildIndex;
+
 		if (escena == 0) {
+			loadParameters ();
 			loadKPInstance ();
-			RandomizeKSInstances ();
+			//RandomizeKSInstances ();
 			SceneManager.LoadScene(1);
 		}
 		else if ( escena == 1) {
-			boardScript.SetupScene ();
-			tiempo = timeTrial;
 			trial++;
+			showTimer = true;
+			boardScript.SetupScene (1);
+			tiempo = timeTrial;
+
 		}
 		else if (escena == 2) {
+			showTimer = true;
+			boardScript.SetupScene (2);
+			tiempo = timeAnswer; 
+		}
+		else if (escena == 3) {
+			showTimer = false;
 			tiempo = timeRest1; 
 		}
 	}
@@ -123,7 +131,9 @@ public class GameManager : MonoBehaviour {
 		string dataTrialText = trial + ";" + answer + ";" + timeSpent; 
 
 		string[] lines = {dataTrialText};
-		string folderPathSave = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/DATA/";
+		//string folderPathSave = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/DATA/";
+
+		string folderPathSave = Application.dataPath.Replace("Assets","") + "DATA/Output/";
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
 
@@ -147,7 +157,8 @@ public class GameManager : MonoBehaviour {
 	 * The instances are stored as ksinstances structures in the array of structures: ksinstances
 	 */
 	public static void loadKPInstance(){
-		string folderPathLoad = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/KPInstances/";
+		//string folderPathLoad = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/KPInstances/";
+		string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/KPInstances/";
 		int linesInEachKPInstance = 4;
 
 		for (int k = 1; k <= numberOfInstances; k++) {
@@ -184,6 +195,120 @@ public class GameManager : MonoBehaviour {
 			
 	}
 
+	//Loads the parameters form the text files: param.txt and layoutParam.txt
+	void loadParameters(){
+		string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/";
+		var dict = new Dictionary<string, string>();
+
+		try {   // Open the text file using a stream reader.
+			using (StreamReader sr = new StreamReader (folderPathLoad + "layoutParam.txt")) {
+
+				// (This loop reads every line until EOF or the first blank line.)
+				string line;
+				while (!string.IsNullOrEmpty((line = sr.ReadLine())))
+				{
+					// Split each line around ':'
+					string[] tmp = line.Split(new char[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+					// Add the key-value pair to the dictionary:
+					dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
+				}
+			}
+				
+
+			using (StreamReader sr1 = new StreamReader (folderPathLoad + "param.txt")) {
+
+				// (This loop reads every line until EOF or the first blank line.)
+				string line1;
+				while (!string.IsNullOrEmpty((line1 = sr1.ReadLine())))
+ 				{
+					//Debug.Log (1);
+					// Split each line around ':'
+					string[] tmp = line1.Split(new char[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+					// Add the key-value pair to the dictionary:
+					dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
+				}
+			}
+		} catch (Exception e) {
+			Debug.Log ("The file could not be read:");
+			Debug.Log (e.Message);
+		}
+
+		assignVariables(dict);
+				
+	}
+
+	//Assigns the parameters in the dictionary to variables
+	void assignVariables(Dictionary<string,string> dictionary){
+
+		//Assigns Parameters
+		string timeRest1S;
+		string timeTrialS;
+		string timeAnswerS;
+		string numberOfTrialsS;
+		string numberOfInstancesS;
+		string instanceRandomizationS;
+
+		dictionary.TryGetValue ("timeRest1", out timeRest1S);
+
+		dictionary.TryGetValue ("timeTrial", out timeTrialS);
+
+		dictionary.TryGetValue ("timeAnswer", out timeAnswerS);
+
+		dictionary.TryGetValue ("numberOfTrials", out numberOfTrialsS);
+
+		dictionary.TryGetValue ("numberOfInstances", out numberOfInstancesS);
+
+		timeRest1=Int32.Parse(timeRest1S);
+		timeTrial=Int32.Parse(timeTrialS);
+		timeAnswer=Int32.Parse(timeAnswerS);
+		numberOfTrials=Int32.Parse(numberOfTrialsS);
+		numberOfInstances=Int32.Parse(numberOfInstancesS);
+			
+		dictionary.TryGetValue ("instanceRandomization", out instanceRandomizationS);
+
+		//If instanceRandomization is not included in the parameters file. It generates a randomization.
+		if (!dictionary.ContainsKey("instanceRandomization")){
+			RandomizeKSInstances();
+		} else{
+			int[] instanceRandomizationNo0 = Array.ConvertAll(instanceRandomizationS.Substring (1, instanceRandomizationS.Length - 2).Split (','), int.Parse);
+			instanceRandomization = new int[instanceRandomizationNo0.Length];
+			foreach (int i in instanceRandomizationNo0) {
+				instanceRandomization[i] = instanceRandomizationNo0 [i] - 1;
+			}
+		}
+
+
+		////Assigns LayoutParameters
+		string timerWidthS;
+		string resolutionWidthS;
+		string resolutionHeightS;
+		string columnsS;
+		string rowsS;
+		string KSItemRadiusS;
+
+		dictionary.TryGetValue ("timerWidth", out timerWidthS);
+
+		dictionary.TryGetValue ("resolutionWidth", out resolutionWidthS);
+
+		dictionary.TryGetValue ("resolutionHeight", out resolutionHeightS);
+
+		dictionary.TryGetValue ("columns", out columnsS);
+
+		dictionary.TryGetValue ("rows", out rowsS);
+
+		dictionary.TryGetValue ("KSItemRadius", out KSItemRadiusS);
+
+		//66
+		timerWidth = Convert.ToSingle (timerWidthS);
+
+		//123 / 66 : Understand why if radius is not static it wont change the actual overlapping radius. i.e. understand static vars and see where layout parameters should be
+		BoardManager.resolutionWidth=Int32.Parse(resolutionWidthS);
+		BoardManager.resolutionHeight=Int32.Parse(resolutionHeightS);
+		BoardManager.columns=Int32.Parse(columnsS);
+		BoardManager.rows=Int32.Parse(rowsS);
+		BoardManager.KSItemRadius=Convert.ToSingle(KSItemRadiusS);//Int32.Parse(KSItemRadiusS);
+	}
+
 
 	//Randomizes the sequence of Instances to be shown to the participant adn stores it in: instanceRandomization
 	void RandomizeKSInstances(){
@@ -194,10 +319,34 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	//Saves and Changes to the next trial
-	public static void changeToNextTrial(int newKPInstance, int answer){
-		save (answer, timeTrial-tiempo);
-		SceneManager.LoadScene(newKPInstance);
+//	//Saves and Changes to the next trial
+//	public static void changeToNextTrial(int newKPInstance, int answer){
+//		save (answer, timeTrial-tiempo);
+//		SceneManager.LoadScene(newKPInstance);
+//	}
+
+
+	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
+	public static void changeToNextScene(int answer){
+		if (escena == 1) {
+			SceneManager.LoadScene(2);
+		} else if (escena == 2) {
+			if (answer == 2) {
+				save (answer, timeTrial);
+			} else {
+				save (answer, timeAnswer-tiempo);
+			}
+			SceneManager.LoadScene(3);
+		} else if (escena == 3) {
+
+			//Checks if trials are over
+			if (trial < numberOfTrials) {
+				SceneManager.LoadScene (1);
+			} else {
+				SceneManager.LoadScene (4);
+			}
+		} 
+			
 	}
 
 	//Updates the timer (including the graphical representation)
@@ -205,19 +354,21 @@ public class GameManager : MonoBehaviour {
 	void startTimer(){
 		tiempo -= Time.deltaTime;
 		//Debug.Log (tiempo);
-
-		RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform>();
-
-		timer.sizeDelta = new Vector2(timerWidth*(tiempo/timeTrial), timer.rect.height);
+		if (showTimer) {
+			//66 Pasar esto a boardManager
+			RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
+			timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
+		}
 
 		if(tiempo < 0)
 		{	
-			if (escena == 1) {
-				save (2, timeTrial);
-			}
-
-			int nuevaEscena = (escena == 1) ? 2 : 1;
-			SceneManager.LoadScene(nuevaEscena);
+			changeToNextScene(2);
+//			if (escena == 1) {
+//				save (2, timeTrial);
+//			}
+//
+//			int nuevaEscena = (escena == 1) ? 2 : 1;
+//			SceneManager.LoadScene(nuevaEscena);
 		}
 	}
 
