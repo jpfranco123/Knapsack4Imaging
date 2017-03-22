@@ -29,8 +29,11 @@ public class GameManager : MonoBehaviour {
 
 
 	//Modifiable Variables:
-	//Interperiod Time
-	public static float timeRest1=5;
+	//Minimum and maximum for randomized interperiod Time 
+	public static float timeRest1min=5;
+	public static float timeRest1max=9;
+
+	//public static float timeRest1;
 
 	//Time given for each trial
 	public static float timeTrial=10;
@@ -47,8 +50,7 @@ public class GameManager : MonoBehaviour {
 	//The order of the instances to be presented
 	public static int[] instanceRandomization;
 
-	//Timer width
-	private static float timerWidth =300;
+
 
 	//This is the string that will be used as the file name where the data is stored. Currently the date-time is used.
 	private static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
@@ -114,7 +116,9 @@ public class GameManager : MonoBehaviour {
 		}
 		else if (escena == 3) {
 			showTimer = false;
-			tiempo = timeRest1; 
+			tiempo = Random.Range(timeRest1min,timeRest1max);
+			Debug.Log ("min" + timeRest1min + "max" +timeRest1max);
+			Debug.Log ("TiempoRest=" + tiempo);
 		}
 	}
 
@@ -241,14 +245,16 @@ public class GameManager : MonoBehaviour {
 	void assignVariables(Dictionary<string,string> dictionary){
 
 		//Assigns Parameters
-		string timeRest1S;
+		string timeRest1minS;
+		string timeRest1maxS;
 		string timeTrialS;
 		string timeAnswerS;
 		string numberOfTrialsS;
 		string numberOfInstancesS;
 		string instanceRandomizationS;
 
-		dictionary.TryGetValue ("timeRest1", out timeRest1S);
+		dictionary.TryGetValue ("timeRest1min", out timeRest1minS);
+		dictionary.TryGetValue ("timeRest1max", out timeRest1maxS);
 
 		dictionary.TryGetValue ("timeTrial", out timeTrialS);
 
@@ -258,7 +264,8 @@ public class GameManager : MonoBehaviour {
 
 		dictionary.TryGetValue ("numberOfInstances", out numberOfInstancesS);
 
-		timeRest1=Int32.Parse(timeRest1S);
+		timeRest1min=Convert.ToSingle (timeRest1minS);
+		timeRest1max=Convert.ToSingle (timeRest1maxS);
 		timeTrial=Int32.Parse(timeTrialS);
 		timeAnswer=Int32.Parse(timeAnswerS);
 		numberOfTrials=Int32.Parse(numberOfTrialsS);
@@ -299,7 +306,7 @@ public class GameManager : MonoBehaviour {
 		dictionary.TryGetValue ("KSItemRadius", out KSItemRadiusS);
 
 		//66
-		timerWidth = Convert.ToSingle (timerWidthS);
+		BoardManager.timerWidth = Convert.ToSingle (timerWidthS);
 
 		//123 / 66 : Understand why if radius is not static it wont change the actual overlapping radius. i.e. understand static vars and see where layout parameters should be
 		BoardManager.resolutionWidth=Int32.Parse(resolutionWidthS);
@@ -356,8 +363,10 @@ public class GameManager : MonoBehaviour {
 		//Debug.Log (tiempo);
 		if (showTimer) {
 			//66 Pasar esto a boardManager
-			RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
-			timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
+
+			boardScript.updateTimer();
+//			RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
+//			timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
 		}
 
 		if(tiempo < 0)

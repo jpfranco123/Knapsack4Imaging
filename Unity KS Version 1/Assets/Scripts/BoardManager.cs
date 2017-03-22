@@ -20,6 +20,9 @@ public class BoardManager : MonoBehaviour {
 	//The item radius. This is used to avoid superposition of items.
 	public static float KSItemRadius = 1.5f;
 
+	//Timer width
+	public static float timerWidth =300;
+
 	//Prefab of the item interface configuration
 	public static GameObject KSItemPrefab;
 
@@ -196,6 +199,11 @@ public class BoardManager : MonoBehaviour {
 		bool overlap = Physics2D.OverlapCircle(pos,KSItemRadius);
 		return overlap;
 
+	}
+
+	public void updateTimer(){
+		RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
+		timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.timeTrial), timer.rect.height);
 	}
 
 

@@ -1,4 +1,5 @@
-timeRest1:1
+timeRest1min:1
+timeRest1max:1
 timeTrial:2
 timeAnswer:1
 numberOfInstances:3
