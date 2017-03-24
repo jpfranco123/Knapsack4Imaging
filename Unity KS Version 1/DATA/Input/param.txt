@@ -1,7 +1,7 @@
-timeRest1min:1
-timeRest1max:1
+timeRest1min:4
+timeRest1max:4
 timeTrial:2
-timeAnswer:1
+timeAnswer:5
 numberOfInstances:3
 numberOfTrials:10
 instanceRandomization:[1,3,2,3,1,3,1,2,3,1]

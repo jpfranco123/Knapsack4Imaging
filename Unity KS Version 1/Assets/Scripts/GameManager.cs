@@ -19,8 +19,11 @@ public class GameManager : MonoBehaviour {
 	//Current Scene
 	private static int escena;
 
-	//Time spent on this scene
+	//Time spent so far on this scene 
 	public static float tiempo;
+
+	//Total time for these scene
+	public static float totalTime;
 
 	//Current trial initialization
 	public static int trial = 0;
@@ -107,12 +110,14 @@ public class GameManager : MonoBehaviour {
 			showTimer = true;
 			boardScript.SetupScene (1);
 			tiempo = timeTrial;
+			totalTime = timeTrial;
 
 		}
 		else if (escena == 2) {
 			showTimer = true;
 			boardScript.SetupScene (2);
-			tiempo = timeAnswer; 
+			tiempo = timeAnswer;
+			totalTime= timeAnswer;
 		}
 		else if (escena == 3) {
 			showTimer = false;
@@ -335,6 +340,7 @@ public class GameManager : MonoBehaviour {
 
 	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
 	public static void changeToNextScene(int answer){
+		BoardManager.keysON = false;
 		if (escena == 1) {
 			SceneManager.LoadScene(2);
 		} else if (escena == 2) {

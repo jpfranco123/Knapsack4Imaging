@@ -37,6 +37,15 @@ public class BoardManager : MonoBehaviour {
 	private int[] ws;
 	private int[] vs;
 
+	//66: WHY IF I CHANGE THE FOLLOWING vars to non-static i cant change them from a function?
+
+	//If randomization of buttons:
+	//1: No/Yes 0: Yes/No
+	private static int randomYes;//=Random.Range(0,2);
+
+	//Should the key be working?
+	public static bool keysON = false;
+
 
 	//This Initializes the GridPositions
 	void InitialiseList()
@@ -60,18 +69,20 @@ public class BoardManager : MonoBehaviour {
 		Button btnLeft = GameObject.Find("LEFTbutton").GetComponent<Button>();
 		Button btnRight = GameObject.Find("RIGHTbutton").GetComponent<Button>();
 
-		int randomYes=Random.Range(0,2);
+		randomYes=Random.Range(0,2);
+		Debug.Log("RandomYesInterface");
+		Debug.Log(randomYes);
 
 		if (randomYes == 1) {
 			btnLeft.GetComponentInChildren<Text>().text = "No";
 			btnRight.GetComponentInChildren<Text>().text = "Yes";
-			btnLeft.onClick.AddListener(()=>GameManager.changeToNextScene(0));
-			btnRight.onClick.AddListener(()=>GameManager.changeToNextScene(1));
+			//btnLeft.onClick.AddListener(()=>GameManager.changeToNextScene(0));
+			//btnRight.onClick.AddListener(()=>GameManager.changeToNextScene(1));
 		} else {
 			btnLeft.GetComponentInChildren<Text>().text = "Yes";
 			btnRight.GetComponentInChildren<Text>().text = "No";
-			btnLeft.onClick.AddListener(()=>GameManager.changeToNextScene(1));
-			btnRight.onClick.AddListener(()=>GameManager.changeToNextScene(0));
+			//btnLeft.onClick.AddListener(()=>GameManager.changeToNextScene(1));
+			//btnRight.onClick.AddListener(()=>GameManager.changeToNextScene(0));
 		}
 	}
 
@@ -157,6 +168,7 @@ public class BoardManager : MonoBehaviour {
 	//Macro function that initializes the Board
 	public void SetupScene(int sceneToSetup)
 	{
+
 		if (sceneToSetup == 1) {
 			//InitialiseList();
 			setKSInstance ();
@@ -185,6 +197,7 @@ public class BoardManager : MonoBehaviour {
 		} else if(sceneToSetup ==2){
 			setKSInstance ();
 			RandomizeButtons ();
+			keysON = true;
 		}
 
 	}
@@ -203,7 +216,34 @@ public class BoardManager : MonoBehaviour {
 
 	public void updateTimer(){
 		RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
-		timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.timeTrial), timer.rect.height);
+
+		timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.totalTime), timer.rect.height);
+	}
+
+	//Sets the triggers for pressing the corresponding keys
+	//123: Perhaps a good practice thing to do would be to create a "close scene" funcction that takes as parameter the answer and closes everything (including keysON=false) and then forwards to 
+	//changeToNextScene(answer) on game manager
+	private void setKeyInput(){
+		
+		//1: No/Yes 0: Yes/No
+		Debug.Log("RandomYesKeys");
+		Debug.Log(randomYes);
+
+		if(randomYes==1){
+			if (Input.GetKeyDown (KeyCode.A)) {
+				GameManager.changeToNextScene (0);
+			} else if (Input.GetKeyDown (KeyCode.G)) {
+				GameManager.changeToNextScene (1);
+			}
+		} else if (randomYes==0){
+			if (Input.GetKeyDown (KeyCode.A)) {
+				GameManager.changeToNextScene (1);
+			} else if (Input.GetKeyDown (KeyCode.G)) {
+				GameManager.changeToNextScene (0);
+			}
+		}
+
+
 	}
 
 
@@ -214,6 +254,10 @@ public class BoardManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		
+		if (keysON) {
+			setKeyInput ();
+		}
 
 	}
 }
