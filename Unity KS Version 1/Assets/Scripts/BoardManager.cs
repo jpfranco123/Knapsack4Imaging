@@ -41,7 +41,7 @@ public class BoardManager : MonoBehaviour {
 
 	//If randomization of buttons:
 	//1: No/Yes 0: Yes/No
-	private static int randomYes;//=Random.Range(0,2);
+	public static int randomYes;//=Random.Range(0,2);
 
 	//Should the key be working?
 	public static bool keysON = false;
@@ -69,9 +69,10 @@ public class BoardManager : MonoBehaviour {
 		Button btnLeft = GameObject.Find("LEFTbutton").GetComponent<Button>();
 		Button btnRight = GameObject.Find("RIGHTbutton").GetComponent<Button>();
 
-		randomYes=Random.Range(0,2);
-		Debug.Log("RandomYesInterface");
-		Debug.Log(randomYes);
+		randomYes=GameManager.buttonRandomization[GameManager.trial-1];
+			//Random.Range(0,2);
+//		Debug.Log("RandomYesInterface");
+//		Debug.Log(randomYes);
 
 		if (randomYes == 1) {
 			btnLeft.GetComponentInChildren<Text>().text = "No";
@@ -127,6 +128,7 @@ public class BoardManager : MonoBehaviour {
 	//Retunrs a random position from the grid and removes the item from the list.
 	Vector3 RandomPosition()
 	{
+		
 		int randomIndex=Random.Range(0,gridPositions.Count);
 		Vector3 randomPosition = gridPositions[randomIndex];
 		gridPositions.RemoveAt(randomIndex);
@@ -231,15 +233,15 @@ public class BoardManager : MonoBehaviour {
 
 		if(randomYes==1){
 			if (Input.GetKeyDown (KeyCode.A)) {
-				GameManager.changeToNextScene (0);
+				GameManager.changeToNextScene (0,randomYes);
 			} else if (Input.GetKeyDown (KeyCode.G)) {
-				GameManager.changeToNextScene (1);
+				GameManager.changeToNextScene (1,randomYes);
 			}
 		} else if (randomYes==0){
 			if (Input.GetKeyDown (KeyCode.A)) {
-				GameManager.changeToNextScene (1);
+				GameManager.changeToNextScene (1,randomYes);
 			} else if (Input.GetKeyDown (KeyCode.G)) {
-				GameManager.changeToNextScene (0);
+				GameManager.changeToNextScene (0,randomYes);
 			}
 		}
 

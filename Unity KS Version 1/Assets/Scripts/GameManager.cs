@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour {
 	//Current trial initialization
 	public static int trial = 0;
 
+	//Current block initialization
+	public static int block = 0;
+
 	private static bool showTimer;
 
 
@@ -35,6 +38,9 @@ public class GameManager : MonoBehaviour {
 	//Minimum and maximum for randomized interperiod Time 
 	public static float timeRest1min=5;
 	public static float timeRest1max=9;
+
+	//InterBlock rest time
+	public static float timeRest2=10;
 
 	//public static float timeRest1;
 
@@ -44,14 +50,20 @@ public class GameManager : MonoBehaviour {
 	//Time given for answering
 	public static float timeAnswer=3;
 
-	//Total number of trials
+	//Total number of trials in each block
 	private static int numberOfTrials = 30;
+
+	//Total number of blocks
+	private static int numberOfBlocks = 3;
 
 	//Number of instance file to be considered. From i1.txt to i_.txt..
 	public static int numberOfInstances = 3;
 
 	//The order of the instances to be presented
 	public static int[] instanceRandomization;
+
+	//The order of the left/right No/Yes randomization
+	public static int[] buttonRandomization;
 
 
 
@@ -96,34 +108,53 @@ public class GameManager : MonoBehaviour {
 	//escena = 		0->Setup	1->Trial	2->RestPeriod
 	void InitGame(){
 
+		/*
+		Scene Order:
+		0=setup
+		1=trial game
+		2=trial game answer
+		3= intertrial rest
+		4= interblock rest
+		5= end
+		*/
 		Scene scene = SceneManager.GetActiveScene();
 		escena = scene.buildIndex;
 
 		if (escena == 0) {
+			//Only uploads parameters and instances once.
+			block++;
 			loadParameters ();
 			loadKPInstance ();
+
 			//RandomizeKSInstances ();
-			SceneManager.LoadScene(1);
-		}
-		else if ( escena == 1) {
+			randomizeButtons ();
+			SceneManager.LoadScene (1);
+		} else if (escena == 1) {
 			trial++;
 			showTimer = true;
 			boardScript.SetupScene (1);
 			tiempo = timeTrial;
 			totalTime = timeTrial;
 
-		}
-		else if (escena == 2) {
+		} else if (escena == 2) {
 			showTimer = true;
 			boardScript.SetupScene (2);
 			tiempo = timeAnswer;
-			totalTime= timeAnswer;
-		}
-		else if (escena == 3) {
+			totalTime = timeAnswer;
+		} else if (escena == 3) {
 			showTimer = false;
-			tiempo = Random.Range(timeRest1min,timeRest1max);
-			Debug.Log ("min" + timeRest1min + "max" +timeRest1max);
+			tiempo = Random.Range (timeRest1min, timeRest1max);
+			totalTime = tiempo;
+		} else if (escena == 4) {
+			trial = 0;
+			block++;
+			showTimer = true;
+			tiempo = timeRest2;
+			totalTime = tiempo;
 			Debug.Log ("TiempoRest=" + tiempo);
+
+			randomizeButtons ();
+			//SceneManager.LoadScene (1);
 		}
 	}
 
@@ -135,9 +166,9 @@ public class GameManager : MonoBehaviour {
 	//Saves the data of a trial to a .txt file with the participants ID as filename using StreamWriter.
 	//If the file doesn't exist it creates it. Otherwise it adds on lines to the existing file.
 	//Each line in the File has the following structure: "trial;answer;timeSpent".
-	public static void save(int answer, float timeSpent) {
+	public static void save(int answer, float timeSpent, int randomYes) {
 
-		string dataTrialText = trial + ";" + answer + ";" + timeSpent; 
+		string dataTrialText = block + ";" + trial + ";" + answer + ";" + timeSpent + ";" + randomYes; 
 
 		string[] lines = {dataTrialText};
 		//string folderPathSave = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/DATA/";
@@ -252,14 +283,17 @@ public class GameManager : MonoBehaviour {
 		//Assigns Parameters
 		string timeRest1minS;
 		string timeRest1maxS;
+		string timeRest2S;
 		string timeTrialS;
 		string timeAnswerS;
 		string numberOfTrialsS;
+		string numberOfBlocksS;
 		string numberOfInstancesS;
 		string instanceRandomizationS;
 
 		dictionary.TryGetValue ("timeRest1min", out timeRest1minS);
 		dictionary.TryGetValue ("timeRest1max", out timeRest1maxS);
+		dictionary.TryGetValue ("timeRest2", out timeRest2S);
 
 		dictionary.TryGetValue ("timeTrial", out timeTrialS);
 
@@ -267,13 +301,17 @@ public class GameManager : MonoBehaviour {
 
 		dictionary.TryGetValue ("numberOfTrials", out numberOfTrialsS);
 
+		dictionary.TryGetValue ("numberOfBlocks", out numberOfBlocksS);
+
 		dictionary.TryGetValue ("numberOfInstances", out numberOfInstancesS);
 
 		timeRest1min=Convert.ToSingle (timeRest1minS);
 		timeRest1max=Convert.ToSingle (timeRest1maxS);
+		timeRest2=Convert.ToSingle (timeRest2S);
 		timeTrial=Int32.Parse(timeTrialS);
 		timeAnswer=Int32.Parse(timeAnswerS);
 		numberOfTrials=Int32.Parse(numberOfTrialsS);
+		numberOfBlocks=Int32.Parse(numberOfBlocksS);
 		numberOfInstances=Int32.Parse(numberOfInstancesS);
 			
 		dictionary.TryGetValue ("instanceRandomization", out instanceRandomizationS);
@@ -324,9 +362,32 @@ public class GameManager : MonoBehaviour {
 
 	//Randomizes the sequence of Instances to be shown to the participant adn stores it in: instanceRandomization
 	void RandomizeKSInstances(){
-		instanceRandomization = new int[numberOfTrials];
-		for (int i = 0; i < numberOfTrials; i++) {
+		instanceRandomization = new int[numberOfTrials*numberOfBlocks];
+		for (int i = 0; i < numberOfTrials*numberOfBlocks; i++) {
 				instanceRandomization[i] = Random.Range(0,numberOfInstances);
+		}
+
+	}
+
+	//Randomizes The Location of the Yes/No button for a whole block.
+	void randomizeButtons(){
+
+		buttonRandomization = new int[numberOfTrials];
+
+		List<int> buttonRandomizationTemp = new List<int> ();
+
+		for (int i = 0; i < numberOfTrials; i++){
+			if (i % 2 == 0) {
+				buttonRandomizationTemp.Add(0);
+			} else {
+				buttonRandomizationTemp.Add(1);
+			}
+		}
+
+		for (int i = 0; i < numberOfTrials; i++) {
+			int randomIndex = Random.Range (0, buttonRandomizationTemp.Count);
+			buttonRandomization [i] = buttonRandomizationTemp [randomIndex];
+			buttonRandomizationTemp.RemoveAt (randomIndex);
 		}
 
 	}
@@ -339,26 +400,31 @@ public class GameManager : MonoBehaviour {
 
 
 	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
-	public static void changeToNextScene(int answer){
+	public static void changeToNextScene(int answer, int randomYes){
 		BoardManager.keysON = false;
 		if (escena == 1) {
-			SceneManager.LoadScene(2);
+			SceneManager.LoadScene (2);
 		} else if (escena == 2) {
 			if (answer == 2) {
-				save (answer, timeTrial);
+				save (answer, timeTrial, randomYes);
 			} else {
-				save (answer, timeAnswer-tiempo);
+				save (answer, timeAnswer - tiempo, randomYes);
 			}
-			SceneManager.LoadScene(3);
+			SceneManager.LoadScene (3);
 		} else if (escena == 3) {
 
 			//Checks if trials are over
 			if (trial < numberOfTrials) {
 				SceneManager.LoadScene (1);
-			} else {
+			} else if (block < numberOfBlocks) {
 				SceneManager.LoadScene (4);
+	
+			} else {
+				SceneManager.LoadScene (5);
 			}
-		} 
+		} else if (escena == 4) {
+			SceneManager.LoadScene (1);
+		}
 			
 	}
 
@@ -377,7 +443,7 @@ public class GameManager : MonoBehaviour {
 
 		if(tiempo < 0)
 		{	
-			changeToNextScene(2);
+			changeToNextScene(2,BoardManager.randomYes);
 //			if (escena == 1) {
 //				save (2, timeTrial);
 //			}
