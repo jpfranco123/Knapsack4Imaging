@@ -43,6 +43,8 @@ public class BoardManager : MonoBehaviour {
 	//1: No/Yes 0: Yes/No
 	public static int randomYes;//=Random.Range(0,2);
 
+	private String question;
+
 	//Should the key be working?
 	public static bool keysON = false;
 
@@ -50,6 +52,7 @@ public class BoardManager : MonoBehaviour {
 	//This Initializes the GridPositions
 	void InitialiseList()
 	{
+
 		gridPositions.Clear ();
 
 		for(int x=1;x<columns+1;x++)
@@ -94,13 +97,15 @@ public class BoardManager : MonoBehaviour {
 	void setKSInstance(){
 		int randInstance = GameManager.instanceRandomization[GameManager.trial-1];
 
-		Text Quest = GameObject.Find("Question").GetComponent<Text>();
+//		Text Quest = GameObject.Find("Question").GetComponent<Text>();
+//
+//		String question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
+//
+//		Quest.text = question;
 
-		String question = "Can you get at least $" + GameManager.ksinstances[randInstance].profit + " using at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
+		question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
 
-		Quest.text = question;
 
-		//66 Carefull: Make sure that KSItems is erased and started in each trial. Static?
 
 		ws = GameManager.ksinstances [randInstance].weights;
 		vs = GameManager.ksinstances [randInstance].values;
@@ -108,6 +113,13 @@ public class BoardManager : MonoBehaviour {
 		KSItemPrefab = (GameObject)Resources.Load ("KSItem");
 
 	}
+
+	//Shows the question on the screen
+	public void setQuestion(){
+		Text Quest = GameObject.Find("Question").GetComponent<Text>();
+		Quest.text = question;
+	}
+
 
 	//Intsantiates an Item
 	void generateItem(int itemNumber ,Vector3 randomPosition){
@@ -198,6 +210,7 @@ public class BoardManager : MonoBehaviour {
 
 		} else if(sceneToSetup ==2){
 			setKSInstance ();
+			setQuestion ();
 			RandomizeButtons ();
 			keysON = true;
 		}
@@ -228,8 +241,8 @@ public class BoardManager : MonoBehaviour {
 	private void setKeyInput(){
 		
 		//1: No/Yes 0: Yes/No
-		Debug.Log("RandomYesKeys");
-		Debug.Log(randomYes);
+		//Debug.Log("RandomYesKeys");
+		//Debug.Log(randomYes);
 
 		if(randomYes==1){
 			if (Input.GetKeyDown (KeyCode.A)) {
@@ -262,4 +275,7 @@ public class BoardManager : MonoBehaviour {
 		}
 
 	}
+
+
+
 }

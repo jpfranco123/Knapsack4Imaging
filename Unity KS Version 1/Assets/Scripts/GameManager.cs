@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 	public static GameManager instance=null;
 
 	//The reference to the script managing the board (interface/canvas).
-	public BoardManager boardScript;
+	private BoardManager boardScript;
 
 	//Current Scene
 	private static int escena;
@@ -47,6 +47,9 @@ public class GameManager : MonoBehaviour {
 	//Time given for each trial
 	public static float timeTrial=10;
 
+	//Time for seeing the KS items without the question
+	public static float timeOnlyItems=1;
+
 	//Time given for answering
 	public static float timeAnswer=3;
 
@@ -70,6 +73,9 @@ public class GameManager : MonoBehaviour {
 	//This is the string that will be used as the file name where the data is stored. Currently the date-time is used.
 	private static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
+	//Is the question shown on scene scene 1?
+	private static int questionOn;
+
 
 	//A structure that contains the parameters of each instance
 	public struct KSInstance
@@ -88,19 +94,18 @@ public class GameManager : MonoBehaviour {
 	void Awake () {
 
 		//Makes the Gama manager a Singleton
-		if (instance == null)
+		if (instance == null) {
 			instance = this;
+		}
 		else if (instance != this)
 			Destroy (gameObject);
 
 		DontDestroyOnLoad (gameObject);
 
-
-		//Initializes the game
-		boardScript = GetComponent<BoardManager> ();
+		//Initializes the game		
+		boardScript = instance.GetComponent<BoardManager> ();
 
 		InitGame();
-
 	}
 
 
@@ -119,7 +124,7 @@ public class GameManager : MonoBehaviour {
 		*/
 		Scene scene = SceneManager.GetActiveScene();
 		escena = scene.buildIndex;
-
+		Debug.Log ("escena" + escena);
 		if (escena == 0) {
 			//Only uploads parameters and instances once.
 			block++;
@@ -128,13 +133,17 @@ public class GameManager : MonoBehaviour {
 
 			//RandomizeKSInstances ();
 			randomizeButtons ();
+
 			SceneManager.LoadScene (1);
+
 		} else if (escena == 1) {
 			trial++;
 			showTimer = true;
 			boardScript.SetupScene (1);
+
 			tiempo = timeTrial;
 			totalTime = timeTrial;
+			questionOn = 0;
 
 		} else if (escena == 2) {
 			showTimer = true;
@@ -151,7 +160,7 @@ public class GameManager : MonoBehaviour {
 			showTimer = true;
 			tiempo = timeRest2;
 			totalTime = tiempo;
-			Debug.Log ("TiempoRest=" + tiempo);
+			//Debug.Log ("TiempoRest=" + tiempo);
 
 			randomizeButtons ();
 			//SceneManager.LoadScene (1);
@@ -290,6 +299,7 @@ public class GameManager : MonoBehaviour {
 		string numberOfBlocksS;
 		string numberOfInstancesS;
 		string instanceRandomizationS;
+		string timeOnlyItemsS;
 
 		dictionary.TryGetValue ("timeRest1min", out timeRest1minS);
 		dictionary.TryGetValue ("timeRest1max", out timeRest1maxS);
@@ -305,6 +315,8 @@ public class GameManager : MonoBehaviour {
 
 		dictionary.TryGetValue ("numberOfInstances", out numberOfInstancesS);
 
+		dictionary.TryGetValue ("timeOnlyItems", out timeOnlyItemsS);
+
 		timeRest1min=Convert.ToSingle (timeRest1minS);
 		timeRest1max=Convert.ToSingle (timeRest1maxS);
 		timeRest2=Convert.ToSingle (timeRest2S);
@@ -313,6 +325,7 @@ public class GameManager : MonoBehaviour {
 		numberOfTrials=Int32.Parse(numberOfTrialsS);
 		numberOfBlocks=Int32.Parse(numberOfBlocksS);
 		numberOfInstances=Int32.Parse(numberOfInstancesS);
+		timeOnlyItems=Convert.ToSingle (timeOnlyItemsS);
 			
 		dictionary.TryGetValue ("instanceRandomization", out instanceRandomizationS);
 
@@ -440,6 +453,12 @@ public class GameManager : MonoBehaviour {
 //			RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
 //			timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
 		}
+
+		if (escena == 1 && tiempo <= totalTime - timeOnlyItems && questionOn==0) {
+			boardScript.setQuestion ();
+			questionOn = 1;
+		}
+			
 
 		if(tiempo < 0)
 		{	
