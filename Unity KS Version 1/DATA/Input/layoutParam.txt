@@ -3,4 +3,4 @@ resolutionHeight:600
 columns:16
 rows:12
 timerWidth:400
-KSItemRadius:1.5
+KSItemRadius:1

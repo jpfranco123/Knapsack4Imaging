@@ -1,7 +1,7 @@
 timeRest1min:4
 timeRest1max:4
 timeRest2:5
-timeTrial:20
+timeTrial:10
 timeAnswer:3
 numberOfInstances:3
 numberOfTrials:5

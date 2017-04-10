@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -47,6 +48,17 @@ public class BoardManager : MonoBehaviour {
 
 	//Should the key be working?
 	public static bool keysON = false;
+
+
+	private static float minAreaBill = 1f;
+
+	private static float minAreaWeight = 1f;
+
+	private static int totalAreaBill = 7;
+
+	private static int totalAreaWeight = 7;
+
+
 
 
 	//This Initializes the GridPositions
@@ -110,7 +122,10 @@ public class BoardManager : MonoBehaviour {
 		ws = GameManager.ksinstances [randInstance].weights;
 		vs = GameManager.ksinstances [randInstance].values;
 
-		KSItemPrefab = (GameObject)Resources.Load ("KSItem");
+		//KSItemPrefab = (GameObject)Resources.Load ("KSItem");
+
+		KSItemPrefab = (GameObject)Resources.Load ("KSItem3");
+
 
 	}
 
@@ -132,7 +147,38 @@ public class BoardManager : MonoBehaviour {
 		//Setting the position in a separate line is importatant in order to set it according to global coordinates.
 		instance.transform.position = randomPosition;
 
-		instance.GetComponentInChildren<Text>().text = ws[itemNumber]+ "Kg \n $" + vs[itemNumber];
+		//instance.GetComponentInChildren<Text>().text = ws[itemNumber]+ "Kg \n $" + vs[itemNumber];
+
+		GameObject bill = instance.transform.Find("Bill").gameObject;
+		bill.GetComponentInChildren<Text>().text = "$" + vs[itemNumber];
+
+		GameObject weight = instance.transform.Find("Weight").gameObject;
+		weight.GetComponentInChildren<Text>().text = ws[itemNumber]+ "Kg";
+
+
+		// This calculates area accrding to approach 1
+//		float areaItem1 = minAreaBill + (totalAreaBill - vs.Length * minAreaBill) * vs [itemNumber] / vs.Sum ();
+//		float scale1 = Convert.ToSingle (Math.Sqrt (areaItem1) - 1);
+//		bill.transform.localScale += new Vector3 (scale1, scale1, 0);
+//
+//		float areaItem2 = minAreaWeight + (totalAreaWeight - ws.Length * minAreaWeight) * ws [itemNumber] / ws.Sum ();
+//		float scale2 = Convert.ToSingle (Math.Sqrt (areaItem2) - 1);
+//		weight.transform.localScale += new Vector3 (scale2, scale2, 0);
+
+		// This calculates area accrding to approach 2
+
+		float adjustmentBill = (minAreaBill - totalAreaBill * vs.Min () / vs.Sum ()) / (1 - vs.Length * vs.Min () / vs.Sum ());
+
+		float areaItem1 = adjustmentBill + (totalAreaBill - vs.Length * adjustmentBill) * vs [itemNumber] / vs.Sum ();
+		float scale1 = Convert.ToSingle (Math.Sqrt (areaItem1) - 1);
+		bill.transform.localScale += new Vector3 (scale1, scale1, 0);
+
+		float adjustmentWeight = (minAreaWeight - totalAreaWeight * ws.Min () / ws.Sum ()) / (1 - ws.Length * ws.Min () / ws.Sum ());
+
+		float areaItem2 = adjustmentWeight + (totalAreaWeight - ws.Length * adjustmentWeight) * ws [itemNumber] / ws.Sum ();
+		float scale2 = Convert.ToSingle (Math.Sqrt (areaItem2) - 1);
+		weight.transform.localScale += new Vector3 (scale2, scale2, 0);
+
 
 	}
 
@@ -216,6 +262,18 @@ public class BoardManager : MonoBehaviour {
 		}
 
 	}
+
+//	//Checks if positioning an item in the new position generates an overlap. Assuming the new item has a radius of KSITemRadius.
+//	//Returns: TRUE if there is an overlap. FALSE Otherwise.
+//	bool objectOverlapsQ(Vector3 pos)
+//	{
+//		//If physics could be started before update we could use the following easier function:
+//		//bool overlap = Physics2D.IsTouchingLayers(newObject.GetComponent<Collider2D>());
+//
+//		bool overlap = Physics2D.OverlapCircle(pos,KSItemRadius);
+//		return overlap;
+//
+//	}
 
 	//Checks if positioning an item in the new position generates an overlap. Assuming the new item has a radius of KSITemRadius.
 	//Returns: TRUE if there is an overlap. FALSE Otherwise.
