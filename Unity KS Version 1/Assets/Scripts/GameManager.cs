@@ -110,11 +110,10 @@ public class GameManager : MonoBehaviour {
 
 
 	//Initializes the scene. One scene is setup, other is trial, other is Break....
-	//escena = 		0->Setup	1->Trial	2->RestPeriod
 	void InitGame(){
 
 		/*
-		Scene Order:
+		Scene Order: escena
 		0=setup
 		1=trial game
 		2=trial game answer
@@ -347,29 +346,29 @@ public class GameManager : MonoBehaviour {
 		string resolutionHeightS;
 		string columnsS;
 		string rowsS;
-		string KSItemRadiusS;
+		//string KSItemRadiusS;
+		string totalAreaBillS;
+		string totalAreaWeightS;
 
 		dictionary.TryGetValue ("timerWidth", out timerWidthS);
-
 		dictionary.TryGetValue ("resolutionWidth", out resolutionWidthS);
-
 		dictionary.TryGetValue ("resolutionHeight", out resolutionHeightS);
-
 		dictionary.TryGetValue ("columns", out columnsS);
-
 		dictionary.TryGetValue ("rows", out rowsS);
+		dictionary.TryGetValue ("totalAreaBill", out totalAreaBillS);
+		dictionary.TryGetValue ("totalAreaWeight", out totalAreaWeightS);
 
-		dictionary.TryGetValue ("KSItemRadius", out KSItemRadiusS);
+		//dictionary.TryGetValue ("KSItemRadius", out KSItemRadiusS);
 
-		//66
 		BoardManager.timerWidth = Convert.ToSingle (timerWidthS);
 
-		//123 / 66 : Understand why if radius is not static it wont change the actual overlapping radius. i.e. understand static vars and see where layout parameters should be
 		BoardManager.resolutionWidth=Int32.Parse(resolutionWidthS);
 		BoardManager.resolutionHeight=Int32.Parse(resolutionHeightS);
 		BoardManager.columns=Int32.Parse(columnsS);
 		BoardManager.rows=Int32.Parse(rowsS);
-		BoardManager.KSItemRadius=Convert.ToSingle(KSItemRadiusS);//Int32.Parse(KSItemRadiusS);
+		BoardManager.totalAreaBill=Int32.Parse(totalAreaBillS);
+		BoardManager.totalAreaWeight=Int32.Parse(totalAreaWeightS);
+		//BoardManager.KSItemRadius=Convert.ToSingle(KSItemRadiusS);//Int32.Parse(KSItemRadiusS);
 	}
 
 
@@ -425,20 +424,38 @@ public class GameManager : MonoBehaviour {
 			}
 			SceneManager.LoadScene (3);
 		} else if (escena == 3) {
-
-			//Checks if trials are over
-			if (trial < numberOfTrials) {
-				SceneManager.LoadScene (1);
-			} else if (block < numberOfBlocks) {
-				SceneManager.LoadScene (4);
-	
-			} else {
-				SceneManager.LoadScene (5);
-			}
+			changeToNextTrial ();
 		} else if (escena == 4) {
 			SceneManager.LoadScene (1);
 		}
 			
+	}
+
+	//Redirects to the next scene depending if the trials or blocks are over.
+	private static void changeToNextTrial(){
+		//Checks if trials are over
+		if (trial < numberOfTrials) {
+			SceneManager.LoadScene (1);
+		} else if (block < numberOfBlocks) {
+			SceneManager.LoadScene (4);
+		} else {
+			SceneManager.LoadScene (5);
+		}
+	}
+
+	/// <summary>
+	/// In case of an error: Skip trial and go to next one.
+	/// Example of error: Not enough space to place all items
+	/// </summary>
+	/// Receives as input a string with the errorDetails which is saved in the output file.
+	public static void errorInScene(string errorDetails){
+		Debug.Log (errorDetails);
+
+		BoardManager.keysON = false;
+		int answer = 3;
+		int randomYes = -1;
+		save (answer, timeTrial, randomYes);
+		changeToNextTrial ();
 	}
 
 	//Updates the timer (including the graphical representation)
