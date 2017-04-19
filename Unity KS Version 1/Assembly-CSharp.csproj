@@ -49,6 +49,13 @@
      <Compile Include="Assets\Scripts\BoardManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
      <Compile Include="Assets\Scripts\player.cs" />
+     <None Include="Assets\DATAinf\Input\KPInstances\i1.txt" />
+     <None Include="Assets\DATAinf\Input\param.txt" />
+     <None Include="Assets\DATAinf\Input\KPInstances\i3.txt" />
+     <None Include="Assets\DATAinf\Input\paramNitin.txt" />
+     <None Include="Assets\DATAinf\Input\KPInstances\i1 copy.txt" />
+     <None Include="Assets\DATAinf\Input\layoutParam.txt" />
+     <None Include="Assets\DATAinf\Input\KPInstances\i2.txt" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>

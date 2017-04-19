@@ -183,7 +183,7 @@ public class BoardManager : MonoBehaviour {
 		//Area Approach 2 calculation general idea:
 		//The total area is constant. The area is divided among the items propotional to the ratio between the value (weight) and the sum of all the values (weights) of the items. 
 		//Afterwards a constant area is substracted (or added) from all items in order to make the area of the minimum item equal to the minimum area defined, mantianing the total area constant.
-		// Equation: area_i = c + (totalArea-numberOfItems*c)*(value_i/sum(value_i))
+		// Equations: 1. area_i = c + (totalArea-numberOfItems*c)*(value_i/sum(value_i)) 2. min(area_i)=minimumAreaDefined
 		float adjustmentBill = (minAreaBill - totalAreaBill * vs.Min () / vs.Sum ()) / (1 - vs.Length * vs.Min () / vs.Sum ());
 		float areaItem1 = adjustmentBill + (totalAreaBill - vs.Length * adjustmentBill) * vs [itemNumber] / vs.Sum ();
 		float scale1 = Convert.ToSingle (Math.Sqrt (areaItem1) - 1);

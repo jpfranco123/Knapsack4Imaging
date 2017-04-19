@@ -181,7 +181,8 @@ public class GameManager : MonoBehaviour {
 		string[] lines = {dataTrialText};
 		//string folderPathSave = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/DATA/";
 
-		string folderPathSave = Application.dataPath.Replace("Assets","") + "DATA/Output/";
+		//string folderPathSave = Application.dataPath.Replace("Assets","") + "DATA/Output/";
+		string folderPathSave = Application.dataPath + "/DATAinf/Output/";
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
 
@@ -205,8 +206,8 @@ public class GameManager : MonoBehaviour {
 	 * The instances are stored as ksinstances structures in the array of structures: ksinstances
 	 */
 	public static void loadKPInstance(){
-		//string folderPathLoad = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/KPInstances/";
-		string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/KPInstances/";
+		//string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/KPInstances/";
+		string folderPathLoad = Application.dataPath + "/DATAinf/Input/KPInstances/";
 		int linesInEachKPInstance = 4;
 
 		for (int k = 1; k <= numberOfInstances; k++) {
@@ -245,7 +246,8 @@ public class GameManager : MonoBehaviour {
 
 	//Loads the parameters form the text files: param.txt and layoutParam.txt
 	void loadParameters(){
-		string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/";
+		//string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/";
+		string folderPathLoad = Application.dataPath + "/DATAinf/Input/";
 		var dict = new Dictionary<string, string>();
 
 		try {   // Open the text file using a stream reader.
