@@ -78,9 +78,12 @@ public class BoardManager : MonoBehaviour {
 	{
 		gridPositions.Clear ();
 
-		for(int x=0;x<columns+1;x++)
+//		for(int x=0;x<columns+1;x++)
+//		{
+//			for ( int y =0; y<rows+1;y++)
+		for(int x=-1;x<columns+2;x++)
 		{
-			for ( int y =0; y<rows+1;y++)
+			for ( int y =-1; y<rows+2;y++)
 			{	
 				float xUnit =(float) (resolutionWidth / 100)/columns;
 				float yUnit =(float) (resolutionHeight / 100)/rows;
@@ -128,8 +131,8 @@ public class BoardManager : MonoBehaviour {
 //		String question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
 //		Quest.text = question;
 
-		//question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
-		question = "Can you pack $" + GameManager.ksinstances[randInstance].profit + " if your capacity is " + GameManager.ksinstances[randInstance].capacity +"kg?";
+		//question = "Can you pack $" + GameManager.ksinstances[randInstance].profit + " if your capacity is " + GameManager.ksinstances[randInstance].capacity +"kg?";
+		question = "$" + GameManager.ksinstances[randInstance].profit + System.Environment.NewLine + GameManager.ksinstances[randInstance].capacity +"kg?";
 
 		ws = GameManager.ksinstances [randInstance].weights;
 		vs = GameManager.ksinstances [randInstance].values;
@@ -278,7 +281,7 @@ public class BoardManager : MonoBehaviour {
 				}
 
 				InitialiseList ();
-				//seeGrid();
+				seeGrid();
 				itemsPlaced = LayoutObjectAtRandom ();
 				nt--;
 				Debug.Log (nt);
@@ -320,8 +323,10 @@ public class BoardManager : MonoBehaviour {
 
 	//Updates the timer rectangle size accoriding to the remaining time.
 	public void updateTimer(){
-		RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
-		timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.totalTime), timer.rect.height);
+		// timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
+		// timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.totalTime), timer.rect.height);
+		Image timer = GameObject.Find ("Timer").GetComponent<Image> ();
+		timer.fillAmount = GameManager.tiempo / GameManager.totalTime;
 	}
 
 	//Sets the triggers for pressing the corresponding keys
