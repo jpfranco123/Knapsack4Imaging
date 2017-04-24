@@ -343,18 +343,18 @@ public class GameManager : MonoBehaviour {
 
 
 		////Assigns LayoutParameters
-		string timerWidthS;
-		string resolutionWidthS;
-		string resolutionHeightS;
+		string randomPlacementTypeS;
+		//string resolutionWidthS;
+		//string resolutionHeightS;
 		string columnsS;
 		string rowsS;
 		//string KSItemRadiusS;
 		string totalAreaBillS;
 		string totalAreaWeightS;
 
-		dictionary.TryGetValue ("timerWidth", out timerWidthS);
-		dictionary.TryGetValue ("resolutionWidth", out resolutionWidthS);
-		dictionary.TryGetValue ("resolutionHeight", out resolutionHeightS);
+		dictionary.TryGetValue ("randomPlacementType", out randomPlacementTypeS);
+		//dictionary.TryGetValue ("resolutionWidth", out resolutionWidthS);
+		//dictionary.TryGetValue ("resolutionHeight", out resolutionHeightS);
 		dictionary.TryGetValue ("columns", out columnsS);
 		dictionary.TryGetValue ("rows", out rowsS);
 		dictionary.TryGetValue ("totalAreaBill", out totalAreaBillS);
@@ -362,10 +362,10 @@ public class GameManager : MonoBehaviour {
 
 		//dictionary.TryGetValue ("KSItemRadius", out KSItemRadiusS);
 
-		BoardManager.timerWidth = Convert.ToSingle (timerWidthS);
+		BoardManager.randomPlacementType = Int32.Parse(randomPlacementTypeS);
 
-		BoardManager.resolutionWidth=Int32.Parse(resolutionWidthS);
-		BoardManager.resolutionHeight=Int32.Parse(resolutionHeightS);
+		//BoardManager.resolutionWidth=Int32.Parse(resolutionWidthS);
+		//BoardManager.resolutionHeight=Int32.Parse(resolutionHeightS);
 		BoardManager.columns=Int32.Parse(columnsS);
 		BoardManager.rows=Int32.Parse(rowsS);
 		BoardManager.totalAreaBill=Int32.Parse(totalAreaBillS);
