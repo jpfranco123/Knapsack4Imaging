@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 	private BoardManager boardScript;
 
 	//Current Scene
-	private static int escena;
+	public static int escena;
 
 	//Time spent so far on this scene 
 	public static float tiempo;
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour {
 
 
 	//This is the string that will be used as the file name where the data is stored. Currently the date-time is used.
-	private static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
+	public static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
 	//Is the question shown on scene scene 1?
 	private static int questionOn;
@@ -132,16 +132,23 @@ public class GameManager : MonoBehaviour {
 
 			//RandomizeKSInstances ();
 			randomizeButtons ();
+			boardScript.setupInitialScreen ();
 
-			SceneManager.LoadScene (1);
+
+			//SceneManager.LoadScene (1);
 
 		} else if (escena == 1) {
 			trial++;
 			showTimer = true;
 			boardScript.SetupScene (1);
 
-			tiempo = timeTrial;
-			totalTime = timeTrial;
+			tiempo = timeOnlyItems;
+			totalTime = timeOnlyItems;
+
+//			tiempo = timeTrial;
+//			totalTime = timeTrial;
+
+
 			questionOn = 0;
 
 		} else if (escena == 2) {
@@ -168,7 +175,10 @@ public class GameManager : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		startTimer ();
+
+		if (escena != 0) {
+			startTimer ();
+		}
 	}
 		
 	//Saves the data of a trial to a .txt file with the participants ID as filename using StreamWriter.
@@ -416,7 +426,10 @@ public class GameManager : MonoBehaviour {
 	//Takes care of changing the Scene to the next one (Except for when in the setup scene)
 	public static void changeToNextScene(int answer, int randomYes){
 		BoardManager.keysON = false;
-		if (escena == 1) {
+		if (escena == 0) {
+			SceneManager.LoadScene (1);
+		}
+		else if (escena == 1) {
 			SceneManager.LoadScene (2);
 		} else if (escena == 2) {
 			if (answer == 2) {
@@ -466,28 +479,25 @@ public class GameManager : MonoBehaviour {
 		tiempo -= Time.deltaTime;
 		//Debug.Log (tiempo);
 		if (showTimer) {
-			//66 Pasar esto a boardManager
-
 			boardScript.updateTimer();
 //			RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
 //			timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
 		}
 
-		if (escena == 1 && tiempo <= totalTime - timeOnlyItems && questionOn==0) {
-			boardScript.setQuestion ();
-			questionOn = 1;
-		}
+
 			
 
 		if(tiempo < 0)
 		{	
-			changeToNextScene(2,BoardManager.randomYes);
-//			if (escena == 1) {
-//				save (2, timeTrial);
-//			}
-//
-//			int nuevaEscena = (escena == 1) ? 2 : 1;
-//			SceneManager.LoadScene(nuevaEscena);
+			if (escena == 1 && questionOn == 0) {
+				totalTime = timeTrial - timeOnlyItems;
+				tiempo = totalTime;
+				boardScript.setQuestion ();
+				questionOn = 1;
+			} else {
+				changeToNextScene(2,BoardManager.randomYes);
+			}
+
 		}
 	}
 

@@ -317,7 +317,7 @@ public class BoardManager : MonoBehaviour {
 				}
 
 				InitialiseList ();
-				seeGrid();
+				//seeGrid();
 				itemsPlaced = LayoutObjectAtRandom ();
 				nt--;
 				Debug.Log (nt);
@@ -328,7 +328,7 @@ public class BoardManager : MonoBehaviour {
 
 		} else if(sceneToSetup ==2){
 			setKSInstance ();
-			setQuestion ();
+			//setQuestion ();
 			RandomizeButtons ();
 			keysON = true;
 
@@ -379,23 +379,65 @@ public class BoardManager : MonoBehaviour {
 	//123: Perhaps a good practice thing to do would be to create a "close scene" function that takes as parameter the answer and closes everything (including keysON=false) and then forwards to 
 	//changeToNextScene(answer) on game manager
 	private void setKeyInput(){
-		
-		//1: No/Yes 0: Yes/No
-		if(randomYes==1){
-			if (Input.GetKeyDown (KeyCode.A)) {
-				GameManager.changeToNextScene (0,randomYes);
-			} else if (Input.GetKeyDown (KeyCode.G)) {
-				GameManager.changeToNextScene (1,randomYes);
+
+		if (GameManager.escena == 2) {
+			//1: No/Yes 0: Yes/No
+			if (randomYes == 1) {
+				if (Input.GetKeyDown (KeyCode.A)) {
+					GameManager.changeToNextScene (0, randomYes);
+				} else if (Input.GetKeyDown (KeyCode.G)) {
+					GameManager.changeToNextScene (1, randomYes);
+				}
+			} else if (randomYes == 0) {
+				if (Input.GetKeyDown (KeyCode.A)) {
+					GameManager.changeToNextScene (1, randomYes);
+				} else if (Input.GetKeyDown (KeyCode.G)) {
+					GameManager.changeToNextScene (0, randomYes);
+				}
 			}
-		} else if (randomYes==0){
-			if (Input.GetKeyDown (KeyCode.A)) {
-				GameManager.changeToNextScene (1,randomYes);
-			} else if (Input.GetKeyDown (KeyCode.G)) {
-				GameManager.changeToNextScene (0,randomYes);
+		} else if (GameManager.escena == 0) {
+			if (Input.GetKeyDown (KeyCode.D)) {
+				GameManager.changeToNextScene (2, -2);
 			}
 		}
 	}
 
+	public void setupInitialScreen(){
+
+		//Button 
+		GameObject start = GameObject.Find("Start") as GameObject;
+		start.SetActive (false);
+
+		//start.btnLeft.GetComponentInChildren<Text>().text = "No";
+
+		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
+
+		InputField.SubmitEvent se = new InputField.SubmitEvent();
+		//se.AddListener(submitPID(start));
+		se.AddListener((value)=>submitPID(value,start));
+		pID.onEndEdit = se;
+
+
+		//pID.onSubmit.AddListener((value) => submitPID(value));
+
+	}
+
+	private void submitPID(string pIDs, GameObject start){
+
+		//Debug.Log (pIDs);
+
+		GameObject pID = GameObject.Find ("ParticipantID");
+		pID.SetActive (false);
+
+		//Set Participant ID
+		GameManager.participantID=pIDs;
+
+		//Activate Start Button and listener
+		//GameObject start = GameObject.Find("Start");
+		start.SetActive (true);
+		keysON = true;
+
+	}
 
 	// Use this for initialization
 	void Start () {
