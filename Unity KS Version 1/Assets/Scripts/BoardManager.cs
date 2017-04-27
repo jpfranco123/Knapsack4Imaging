@@ -11,19 +11,24 @@ using Random = UnityEngine.Random;
 public class BoardManager : MonoBehaviour {
 
 	//Resoultion width and Height
-	//CAUTION! Modifying this does not directly modify the Screen resolution. This is related to the unit grid on Unity.
+	//CAUTION! Modifying this does not modify the Screen resolution. This is related to the unit grid on Unity.
 	public static int resolutionWidth = 800;
 	public static int resolutionHeight = 600;
 
 	//Number of Columns and rows of the grid (the possible positions of the items).
-	public static int columns = 8;
-	public static int rows = 6;
+	public static int columns = 16;
+	public static int rows = 12;
 
 	//The item radius. This is used to avoid superposition of items.
 	//public static float KSItemRadius = 1.5f;
 
 	//Timer width
-	public static float timerWidth =300;
+	//public static float timerWidth =400;
+
+	//The method to be used to place items randomly on the grid.
+	//1. Choose random positions from full grid. It might happen that no placement is found and the trial will be skipped.
+	//2. Choose randomly out of 10 positions. A placement is guaranteed
+	public static int randomPlacementType =1;
 
 	//Prefab of the item interface configuration
 	public static GameObject KSItemPrefab;
@@ -78,15 +83,40 @@ public class BoardManager : MonoBehaviour {
 	{
 		gridPositions.Clear ();
 
-		for(int x=0;x<columns+1;x++)
-		{
-			for ( int y =0; y<rows+1;y++)
-			{	
-				float xUnit =(float) (resolutionWidth / 100)/columns;
-				float yUnit =(float) (resolutionHeight / 100)/rows;
-				gridPositions.Add(new Vector3(x*xUnit,y*yUnit,0f));
+		if (randomPlacementType == 1) {
+			//"Completely-Random" Grid
+			for (int x = -1; x < columns + 2; x++) {
+				for (int y = -1; y < rows + 2; y++) {	
+					float xUnit = (float)(resolutionWidth / 100) / columns;
+					float yUnit = (float)(resolutionHeight / 100) / rows;
+					gridPositions.Add (new Vector3 (x * xUnit, y * yUnit, 0f));
+				}
+			}
+		} else if (randomPlacementType == 2){
+			//Simple 10 positions grid. 
+			for ( int y =1; y<rows+1;y=y+5)
+			{
+				if (y == 6) {
+					for(int x=2;x<columns+1;x=x+12)
+					{	
+						float xUnit =(float) (resolutionWidth / 100)/columns;
+						float yUnit =(float) (resolutionHeight / 100)/rows;
+						gridPositions.Add(new Vector3(x*xUnit,y*yUnit,0f));
+						//Debug.Log ("x" + x + " y" + y);
+					}
+				} else {
+					for(int x=1;x<columns+1;x=x+5)
+					{	
+						float xUnit =(float) (resolutionWidth / 100)/columns;
+						float yUnit =(float) (resolutionHeight / 100)/rows;
+						gridPositions.Add(new Vector3(x*xUnit,y*yUnit,0f));
+						//Debug.Log ("x" + x + " y" + y);
+					}
+				}
 			}
 		}
+
+
 	}
 
 	//Call only for visualizing grid in the Canvas.
@@ -128,8 +158,8 @@ public class BoardManager : MonoBehaviour {
 //		String question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
 //		Quest.text = question;
 
-		//question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
-		question = "Can you pack $" + GameManager.ksinstances[randInstance].profit + " if your capacity is " + GameManager.ksinstances[randInstance].capacity +"kg?";
+		//question = "Can you pack $" + GameManager.ksinstances[randInstance].profit + " if your capacity is " + GameManager.ksinstances[randInstance].capacity +"kg?";
+		question = "$" + GameManager.ksinstances[randInstance].profit + System.Environment.NewLine + GameManager.ksinstances[randInstance].capacity +"kg?";
 
 		ws = GameManager.ksinstances [randInstance].weights;
 		vs = GameManager.ksinstances [randInstance].values;
@@ -195,17 +225,26 @@ public class BoardManager : MonoBehaviour {
 		weight.transform.localScale += new Vector3 (scale2, scale2, 0);
 			
 		//Using the scaling results it calculates the coordinates (with respect to the center of the item) of the item.
-		float weightH = weight.GetComponent<BoxCollider2D> ().size.y;
-		float weightW = weight.GetComponent<BoxCollider2D> ().size.x;
-		float valueH = bill.GetComponent<BoxCollider2D> ().size.y;
-		float valueW = bill.GetComponent<BoxCollider2D> ().size.x;
+//		float weightH = weight.GetComponent<BoxCollider2D> ().size.y;
+//		float weightW = weight.GetComponent<BoxCollider2D> ().size.x;
+//		float valueH = bill.GetComponent<BoxCollider2D> ().size.y;
+//		float valueW = bill.GetComponent<BoxCollider2D> ().size.x;
+		float weightH = weight.GetComponent<BoxCollider2D> ().size.y*weight.transform.localScale.y;
+		float weightW = weight.GetComponent<BoxCollider2D> ().size.x*weight.transform.localScale.x;
+		float valueH = bill.GetComponent<BoxCollider2D> ().size.y*bill.transform.localScale.y;
+		float valueW = bill.GetComponent<BoxCollider2D> ().size.x*bill.transform.localScale.x;
 
 		Item itemInstance = new Item();
 		itemInstance.gameItem=instance;
-		itemInstance.coordValue1=new Vector2(-valueW*(1+scale1)/2,0);
-		itemInstance.coordValue2=new Vector2(valueW*(1+scale1)/2,valueH*(1+scale1));
-		itemInstance.coordWeight1=new Vector2(-weightW*(1+scale2)/2,0);
-		itemInstance.coordWeight2=new Vector2(weightW*(1+scale2)/2,-weightH*(1+scale2));
+//		itemInstance.coordValue1=new Vector2(-valueW*(1+scale1)/2,0);
+//		itemInstance.coordValue2=new Vector2(valueW*(1+scale1)/2,valueH*(1+scale1));
+//		itemInstance.coordWeight1=new Vector2(-weightW*(1+scale2)/2,0);
+//		itemInstance.coordWeight2=new Vector2(weightW*(1+scale2)/2,-weightH*(1+scale2));
+
+		itemInstance.coordValue1=new Vector2(-valueW/2,0);
+		itemInstance.coordValue2=new Vector2(valueW/2,valueH);
+		itemInstance.coordWeight1=new Vector2(-weightW/2,0);
+		itemInstance.coordWeight2=new Vector2(weightW/2,-weightH);
 
 		return(itemInstance);
 
@@ -289,9 +328,13 @@ public class BoardManager : MonoBehaviour {
 
 		} else if(sceneToSetup ==2){
 			setKSInstance ();
-			setQuestion ();
+			//setQuestion ();
 			RandomizeButtons ();
 			keysON = true;
+
+			//1234
+//			InitialiseList ();
+//			seeGrid();
 		}
 
 	}
@@ -315,36 +358,86 @@ public class BoardManager : MonoBehaviour {
 		Vector2 posxy = new Vector3 (pos.x, pos.y);
 		bool overlapValue = Physics2D.OverlapArea (item.coordValue1+posxy, item.coordValue2+posxy);
 		bool overlapWeight = Physics2D.OverlapArea (item.coordWeight1+posxy, item.coordWeight2+posxy);
+
+		Debug.Log ("Item");
+		Debug.Log(item.coordValue1 + posxy);
+		Debug.Log(item.coordValue2+posxy);
+		//1234
 		return overlapValue || overlapWeight;
+        //return false;
 	}
 
 	//Updates the timer rectangle size accoriding to the remaining time.
 	public void updateTimer(){
-		RectTransform timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
-		timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.totalTime), timer.rect.height);
+		// timer = GameObject.Find ("Timer").GetComponent<RectTransform> ();
+		// timer.sizeDelta = new Vector2 (timerWidth * (GameManager.tiempo / GameManager.totalTime), timer.rect.height);
+		Image timer = GameObject.Find ("Timer").GetComponent<Image> ();
+		timer.fillAmount = GameManager.tiempo / GameManager.totalTime;
 	}
 
 	//Sets the triggers for pressing the corresponding keys
 	//123: Perhaps a good practice thing to do would be to create a "close scene" function that takes as parameter the answer and closes everything (including keysON=false) and then forwards to 
 	//changeToNextScene(answer) on game manager
 	private void setKeyInput(){
-		
-		//1: No/Yes 0: Yes/No
-		if(randomYes==1){
-			if (Input.GetKeyDown (KeyCode.A)) {
-				GameManager.changeToNextScene (0,randomYes);
-			} else if (Input.GetKeyDown (KeyCode.G)) {
-				GameManager.changeToNextScene (1,randomYes);
+
+		if (GameManager.escena == 2) {
+			//1: No/Yes 0: Yes/No
+			if (randomYes == 1) {
+				if (Input.GetKeyDown (KeyCode.A)) {
+					GameManager.changeToNextScene (0, randomYes);
+				} else if (Input.GetKeyDown (KeyCode.G)) {
+					GameManager.changeToNextScene (1, randomYes);
+				}
+			} else if (randomYes == 0) {
+				if (Input.GetKeyDown (KeyCode.A)) {
+					GameManager.changeToNextScene (1, randomYes);
+				} else if (Input.GetKeyDown (KeyCode.G)) {
+					GameManager.changeToNextScene (0, randomYes);
+				}
 			}
-		} else if (randomYes==0){
-			if (Input.GetKeyDown (KeyCode.A)) {
-				GameManager.changeToNextScene (1,randomYes);
-			} else if (Input.GetKeyDown (KeyCode.G)) {
-				GameManager.changeToNextScene (0,randomYes);
+		} else if (GameManager.escena == 0) {
+			if (Input.GetKeyDown (KeyCode.D)) {
+				GameManager.changeToNextScene (2, -2);
 			}
 		}
 	}
 
+	public void setupInitialScreen(){
+
+		//Button 
+		GameObject start = GameObject.Find("Start") as GameObject;
+		start.SetActive (false);
+
+		//start.btnLeft.GetComponentInChildren<Text>().text = "No";
+
+		InputField pID = GameObject.Find ("ParticipantID").GetComponent<InputField>();
+
+		InputField.SubmitEvent se = new InputField.SubmitEvent();
+		//se.AddListener(submitPID(start));
+		se.AddListener((value)=>submitPID(value,start));
+		pID.onEndEdit = se;
+
+
+		//pID.onSubmit.AddListener((value) => submitPID(value));
+
+	}
+
+	private void submitPID(string pIDs, GameObject start){
+
+		//Debug.Log (pIDs);
+
+		GameObject pID = GameObject.Find ("ParticipantID");
+		pID.SetActive (false);
+
+		//Set Participant ID
+		GameManager.participantID=pIDs;
+
+		//Activate Start Button and listener
+		//GameObject start = GameObject.Find("Start");
+		start.SetActive (true);
+		keysON = true;
+
+	}
 
 	// Use this for initialization
 	void Start () {
