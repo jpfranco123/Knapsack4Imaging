@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Random = UnityEngine.Random;
+//using System.Diagnostics;
 
 public class GameManager : MonoBehaviour {
 
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour {
 
 	//public static float timeRest1;
 
-	//Time given for each trial
+	//Time given for each trial (The total time the items are shown -With and without the question-)
 	public static float timeTrial=10;
 
 	//Time for seeing the KS items without the question
@@ -68,13 +69,21 @@ public class GameManager : MonoBehaviour {
 	//The order of the left/right No/Yes randomization
 	public static int[] buttonRandomization;
 
-
-
 	//This is the string that will be used as the file name where the data is stored. Currently the date-time is used.
 	public static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
 	//Is the question shown on scene scene 1?
 	private static int questionOn;
+
+	//Input and Outout Folders with respect to the Application.dataPath;
+	private static string inputFolder = "/DATAinf/Input/";
+	private static string inputFolderKSInstances = "/DATAinf/Input/KPInstances/";
+	private static string outputFolder = "/DATAinf/Output/";
+
+	// Stopwatch to calculate time of events.
+	private static System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+	// Time at which the stopwatch started. Time of each event is calculated according to this moment.
+	private static string initialTimeStamp;
 
 
 	//A structure that contains the parameters of each instance
@@ -106,6 +115,10 @@ public class GameManager : MonoBehaviour {
 		boardScript = instance.GetComponent<BoardManager> ();
 
 		InitGame();
+		if (escena != 0) {
+			saveTimeStamp(escena);
+		}
+
 	}
 
 
@@ -133,8 +146,6 @@ public class GameManager : MonoBehaviour {
 			//RandomizeKSInstances ();
 			randomizeButtons ();
 			boardScript.setupInitialScreen ();
-
-
 			//SceneManager.LoadScene (1);
 
 		} else if (escena == 1) {
@@ -144,10 +155,6 @@ public class GameManager : MonoBehaviour {
 
 			tiempo = timeOnlyItems;
 			totalTime = timeOnlyItems;
-
-//			tiempo = timeTrial;
-//			totalTime = timeTrial;
-
 
 			questionOn = 0;
 
@@ -171,8 +178,9 @@ public class GameManager : MonoBehaviour {
 			randomizeButtons ();
 			//SceneManager.LoadScene (1);
 		}
-	}
 
+	}
+		
 	// Update is called once per frame
 	void Update () {
 
@@ -184,24 +192,82 @@ public class GameManager : MonoBehaviour {
 	//Saves the data of a trial to a .txt file with the participants ID as filename using StreamWriter.
 	//If the file doesn't exist it creates it. Otherwise it adds on lines to the existing file.
 	//Each line in the File has the following structure: "trial;answer;timeSpent".
-	public static void save(int answer, float timeSpent, int randomYes) {
+	public static void save(int answer, float timeSpent, int randomYes, string error) {
 
-		string dataTrialText = block + ";" + trial + ";" + answer + ";" + timeSpent + ";" + randomYes; 
+		//string xyCoordinates = instance.boardScript.getItemCoordinates ();//BoardManager.getItemCoordinates ();
+		string xyCoordinates = BoardManager.getItemCoordinates ();
+
+		//Get the instance n umber for this trial and add 1 because the instanceRandomization is linked to array numbering in C#, which starts at 0;
+		int instanceNum = instanceRandomization [trial + (block - 1) * numberOfTrials - 1] + 1;
+
+		string dataTrialText = block + ";" + trial + ";" + answer + ";" + timeSpent + ";" + randomYes +";" + instanceNum + ";" + xyCoordinates + ";" + error; 
 
 		string[] lines = {dataTrialText};
-		//string folderPathSave = @"/Users/jfranco1/Desktop/Unity Projects/knapsack4Imaging/DATA/";
-
-		//string folderPathSave = Application.dataPath.Replace("Assets","") + "DATA/Output/";
-		string folderPathSave = Application.dataPath + "/DATAinf/Output/";
+		string folderPathSave = Application.dataPath + outputFolder;
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID,true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID+".txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		} 
 
 		//Options of streamwriter include: Write, WriteLine, WriteAsync, WriteLineAsync
+	}
+		
+	/// <summary>
+	/// Saves the time stamp for a particular event type to the "TimeStamps" File
+	/// </summary>
+	/// Event type: 1=ItemsNoQuestion;11=ItemsWithQuestion;2=AnswerScreen;21=ParticipantsAnswer;3=InterTrialScreen;4=InterBlockScreen;5=EndScreen
+	public static void saveTimeStamp(int eventType) {
+
+		string dataTrialText = block + ";" + trial + ";" + eventType + ";" + timeStamp(); 
+
+		string[] lines = {dataTrialText};
+		string folderPathSave = Application.dataPath + outputFolder;
+
+		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-TimeStamps.txt",true)) {
+			foreach (string line in lines)
+				outputFile.WriteLine(line);
+		} 
+	}
+
+	/// <summary>
+	/// Saves the headers for both files (Trial Info and Time Stamps)
+	/// In the trial file it saves:  1. The participant ID. 2. Instance details.
+	/// In the TimeStamp file it saves: 1. The participant ID. 2.The time onset of the stopwatch from which the time stamps are measured. 3. the event types description.
+	/// </summary>
+	private static void saveHeaders(){
+		string[] lines = new string[numberOfInstances+2];
+		lines[0]="PartcipantID:" + participantID;
+		int l = 1;
+		int ksn = 1;
+		foreach (KSInstance ks in ksinstances) {
+			lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ());
+			l++;
+			ksn++;
+		}
+		lines [l] = "block;trial;answer;timeSpent;randomYes(1=Left:No/Right:Yes);instanceNumber;xyCoordinates";
+
+		string folderPathSave = Application.dataPath + outputFolder;
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID+".txt",true)) {
+			foreach (string line in lines)
+				outputFile.WriteLine(line);
+		}
+
+		string[] lines1 = new string[4];
+		lines1[0]="PartcipantID:" + participantID;
+		lines1[1] = "InitialTimeStamp:" + initialTimeStamp;
+		lines1[2]="1:ItemsNoQuestion;11:ItemsWithQuestion;2:AnswerScreen;21:ParticipantsAnswer;3:InterTrialScreen;4:InterBlockScreen;5:EndScreen";
+		lines1[3]="block;trial;eventType;elapsedTime"; 
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-TimeStamps.txt",true)) {
+			foreach (string line in lines1)
+				outputFile.WriteLine(line);
+		}
+
+
+
 	}
 
 	/*
@@ -217,7 +283,7 @@ public class GameManager : MonoBehaviour {
 	 */
 	public static void loadKPInstance(){
 		//string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/KPInstances/";
-		string folderPathLoad = Application.dataPath + "/DATAinf/Input/KPInstances/";
+		string folderPathLoad = Application.dataPath + inputFolderKSInstances;
 		int linesInEachKPInstance = 4;
 
 		for (int k = 1; k <= numberOfInstances; k++) {
@@ -257,7 +323,7 @@ public class GameManager : MonoBehaviour {
 	//Loads the parameters form the text files: param.txt and layoutParam.txt
 	void loadParameters(){
 		//string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/";
-		string folderPathLoad = Application.dataPath + "/DATAinf/Input/";
+		string folderPathLoad = Application.dataPath + inputFolder;
 		var dict = new Dictionary<string, string>();
 
 		try {   // Open the text file using a stream reader.
@@ -427,15 +493,17 @@ public class GameManager : MonoBehaviour {
 	public static void changeToNextScene(int answer, int randomYes){
 		BoardManager.keysON = false;
 		if (escena == 0) {
+			saveHeaders ();
 			SceneManager.LoadScene (1);
 		}
 		else if (escena == 1) {
 			SceneManager.LoadScene (2);
 		} else if (escena == 2) {
 			if (answer == 2) {
-				save (answer, timeTrial, randomYes);
+				save (answer, timeTrial, randomYes, "");
 			} else {
-				save (answer, timeAnswer - tiempo, randomYes);
+				save (answer, timeAnswer - tiempo, randomYes, "");
+				saveTimeStamp (21);
 			}
 			SceneManager.LoadScene (3);
 		} else if (escena == 3) {
@@ -469,9 +537,35 @@ public class GameManager : MonoBehaviour {
 		BoardManager.keysON = false;
 		int answer = 3;
 		int randomYes = -1;
-		save (answer, timeTrial, randomYes);
+		save (answer, timeTrial, randomYes, errorDetails);
 		changeToNextTrial ();
 	}
+
+
+	/// <summary>
+	/// Starts the stopwatch. Time of each event is calculated according to this moment.
+	/// Sets "initialTimeStamp" to the time at which the stopwatch started.
+	/// </summary>
+	public static void setTimeStamp(){
+		initialTimeStamp=@System.DateTime.Now.ToString("HH-mm-ss-fff");
+		stopWatch.Start ();
+		Debug.Log (initialTimeStamp);
+	}
+
+	/// <summary>
+	/// Calculates time elapsed 
+	/// </summary>
+	/// <returns>The time elapsed in milliseconds since the "setTimeStamp()".</returns>
+	private static string timeStamp(){
+//		TimeSpan ts = stopWatch.Elapsed;
+//		string stamp = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+//			ts.Hours, ts.Minutes, ts.Seconds,
+//			ts.Milliseconds / 10);
+		long milliSec = stopWatch.ElapsedMilliseconds;
+		string stamp = milliSec.ToString();
+		return stamp;
+	}
+
 
 	//Updates the timer (including the graphical representation)
 	//If time runs out in the trial or the break scene. It switches to the next scene. 
@@ -484,15 +578,15 @@ public class GameManager : MonoBehaviour {
 //			timer.sizeDelta = new Vector2 (timerWidth * (tiempo / timeTrial), timer.rect.height);
 		}
 
-
-			
-
+		//When the time runs out:
 		if(tiempo < 0)
 		{	
 			if (escena == 1 && questionOn == 0) {
+				//After showing only the items do not change to next scene. Just show the question.
 				totalTime = timeTrial - timeOnlyItems;
 				tiempo = totalTime;
 				boardScript.setQuestion ();
+				saveTimeStamp(11);
 				questionOn = 1;
 			} else {
 				changeToNextScene(2,BoardManager.randomYes);

@@ -74,7 +74,11 @@ public class BoardManager : MonoBehaviour {
 		public Vector2 coordValue2;
 		public Vector2 coordWeight1;
 		public Vector2 coordWeight2;
+		public Vector2 center;
 	}
+
+	//The items for the scene are stored here.
+	private static Item[] items;
 
 
 
@@ -246,6 +250,8 @@ public class BoardManager : MonoBehaviour {
 		itemInstance.coordWeight1=new Vector2(-weightW/2,0);
 		itemInstance.coordWeight2=new Vector2(weightW/2,-weightH);
 
+
+
 		return(itemInstance);
 
 	}
@@ -270,9 +276,10 @@ public class BoardManager : MonoBehaviour {
 
 	// Places all the objects from the instance (ws,vs) on the canvas. 
 	// Returns TRUE if all items where positioned, FALSE otherwise.
-	bool LayoutObjectAtRandom()
+	private bool LayoutObjectAtRandom()
 	{
 		int objectCount =ws.Length;
+		items= new Item[objectCount];
 		for(int i=0; i < objectCount;i++)
 		{
 			int objectPositioned = 0;
@@ -284,6 +291,8 @@ public class BoardManager : MonoBehaviour {
 
 					if (!objectOverlapsQ (randomPosition,itemToLocate)) {
 						placeItem (itemToLocate, randomPosition);
+						itemToLocate.center = new Vector2(randomPosition.x,randomPosition.y);
+						items [i] = itemToLocate;
 						objectPositioned = 1;
 					} 
 				}
@@ -310,11 +319,16 @@ public class BoardManager : MonoBehaviour {
 			bool itemsPlaced = false;
 			while (nt >= 1 && !itemsPlaced) {
 
-				GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
-				foreach (GameObject item in items)
+				GameObject[] items1 = GameObject.FindGameObjectsWithTag("Item");
+				foreach (GameObject item in items1)
 				{
 					Destroy(item);
 				}
+
+//				foreach (Item item in items)
+//				{
+//					Destroy(item.gameItem);
+//				}
 
 				InitialiseList ();
 				//seeGrid();
@@ -359,9 +373,9 @@ public class BoardManager : MonoBehaviour {
 		bool overlapValue = Physics2D.OverlapArea (item.coordValue1+posxy, item.coordValue2+posxy);
 		bool overlapWeight = Physics2D.OverlapArea (item.coordWeight1+posxy, item.coordWeight2+posxy);
 
-		Debug.Log ("Item");
-		Debug.Log(item.coordValue1 + posxy);
-		Debug.Log(item.coordValue2+posxy);
+		//Debug.Log ("Item");
+		//Debug.Log(item.coordValue1 + posxy);
+		//Debug.Log(item.coordValue2+posxy);
 		//1234
 		return overlapValue || overlapWeight;
         //return false;
@@ -384,19 +398,24 @@ public class BoardManager : MonoBehaviour {
 			//1: No/Yes 0: Yes/No
 			if (randomYes == 1) {
 				if (Input.GetKeyDown (KeyCode.A)) {
+					//Left
 					GameManager.changeToNextScene (0, randomYes);
 				} else if (Input.GetKeyDown (KeyCode.G)) {
+					//Right
 					GameManager.changeToNextScene (1, randomYes);
 				}
 			} else if (randomYes == 0) {
 				if (Input.GetKeyDown (KeyCode.A)) {
+					//Left
 					GameManager.changeToNextScene (1, randomYes);
 				} else if (Input.GetKeyDown (KeyCode.G)) {
+					//Right
 					GameManager.changeToNextScene (0, randomYes);
 				}
 			}
 		} else if (GameManager.escena == 0) {
 			if (Input.GetKeyDown (KeyCode.D)) {
+				GameManager.setTimeStamp ();
 				GameManager.changeToNextScene (2, -2);
 			}
 		}
@@ -439,9 +458,21 @@ public class BoardManager : MonoBehaviour {
 
 	}
 
+	public static string getItemCoordinates(){
+		string coordinates = "";
+		foreach (Item it in items)
+		{
+			Debug.Log ("item");
+			Debug.Log (it.center);
+			Debug.Log (it.coordWeight1);
+			coordinates = coordinates + "(" + it.center.x + "," + it.center.y + ")";
+		}
+		return coordinates;
+	}
+
 	// Use this for initialization
 	void Start () {
-
+		//GameManager.saveTimeStamp(GameManager.escena);
 	}
 
 	// Update is called once per frame
