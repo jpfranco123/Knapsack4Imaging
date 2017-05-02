@@ -1,0 +1,9 @@
+PartcipantID:34232423
+InitialTimeStamp:15-52-30-238
+1:ItemsNoQuestion;11:ItemsWithQuestion;2:AnswerScreen;21:ParticipantsAnswer;3:InterTrialScreen;4:InterBlockScreen;5:EndScreen
+block;trial;eventType;elapsedTime
+1;1;1;58
+1;1;11;5191
+1;1;2;10233
+1;1;21;10884
+1;1;3;10906

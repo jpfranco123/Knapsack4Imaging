@@ -1,0 +1,14 @@
+PartcipantID:56
+InitialTimeStamp:16-08-38-488
+1:ItemsNoQuestion;11:ItemsWithQuestion;2:AnswerScreen;21:ParticipantsAnswer;3:InterTrialScreen;4:InterBlockScreen;5:EndScreen
+block;trial;eventType;elapsedTime
+1;1;1;71
+1;1;11;5081
+1;1;2;10111
+1;1;3;13152
+1;2;1;17189
+1;2;11;22199
+1;2;2;27244
+1;2;21;28504
+1;2;3;28527
+1;3;1;32585
