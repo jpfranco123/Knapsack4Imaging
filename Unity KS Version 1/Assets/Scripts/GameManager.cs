@@ -94,10 +94,13 @@ public class GameManager : MonoBehaviour {
 
 		public int[] weights;
 		public int[] values;
+
+		public string id;
+		public string type;
 	}
 
 	//An array of all the instances to be uploaded form .txt files.
-	public static KSInstance[] ksinstances = new KSInstance[numberOfInstances];
+	public static KSInstance[] ksinstances;// = new KSInstance[numberOfInstances];
 
 	// Use this for initialization
 	void Awake () {
@@ -244,7 +247,11 @@ public class GameManager : MonoBehaviour {
 		int l = 1;
 		int ksn = 1;
 		foreach (KSInstance ks in ksinstances) {
-			lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ());
+			//Without instance type and problem ID:
+			//lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ());
+			//With instance type and problem ID
+			lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ())
+				+ ";id=" + ks.id + ";type=" + ks.type;
 			l++;
 			ksn++;
 		}
@@ -284,17 +291,26 @@ public class GameManager : MonoBehaviour {
 	public static void loadKPInstance(){
 		//string folderPathLoad = Application.dataPath.Replace("Assets","") + "DATA/Input/KPInstances/";
 		string folderPathLoad = Application.dataPath + inputFolderKSInstances;
-		int linesInEachKPInstance = 4;
+//		int linesInEachKPInstance = 4;
+		ksinstances = new KSInstance[numberOfInstances];
 
 		for (int k = 1; k <= numberOfInstances; k++) {
-			
-			string[] KPInstanceText = new string[linesInEachKPInstance];
+
+			var dict = new Dictionary<string, string>();
+//			string[] KPInstanceText = new string[linesInEachKPInstance];
 			try {   // Open the text file using a stream reader.
 				using (StreamReader sr = new StreamReader (folderPathLoad + "i"+ k +".txt")) {
-					for (int i = 0; i < linesInEachKPInstance; i++) {
-						string line = sr.ReadLine ();
-						string[] dataInLine = line.Split (':');
-						KPInstanceText [i] = dataInLine [1];
+//					for (int i = 0; i < linesInEachKPInstance; i++) {
+//						string line = sr.ReadLine ();
+//						string[] dataInLine = line.Split (':');
+//						KPInstanceText [i] = dataInLine [1];
+//					}
+					string line;
+					while (!string.IsNullOrEmpty((line = sr.ReadLine())))
+					{
+						string[] tmp = line.Split(new char[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+						// Add the key-value pair to the dictionary:
+						dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
 					}
 					// Read the stream to a string, and write the string to the console.
 					//String line = sr.ReadToEnd();
@@ -304,17 +320,26 @@ public class GameManager : MonoBehaviour {
 				Debug.Log (e.Message);
 			}
 
-			int textLineN = 0;
-			ksinstances[k-1].weights = Array.ConvertAll (KPInstanceText [textLineN].Substring (1, KPInstanceText [textLineN].Length - 2).Split (','), int.Parse);
+			string weightsS;
+			string valuesS;
+			string capacityS;
+			string profitS;
 
-			textLineN = 1;
-			ksinstances[k-1].values = Array.ConvertAll (KPInstanceText [textLineN].Substring (1, KPInstanceText [textLineN].Length - 2).Split (','), int.Parse);
+			dict.TryGetValue ("weights", out weightsS);
+			dict.TryGetValue ("values", out valuesS);
+			dict.TryGetValue ("capacity", out capacityS);
+			dict.TryGetValue ("profit", out profitS);
 
-			textLineN = 2;
-			ksinstances[k-1].capacity = int.Parse (KPInstanceText [textLineN]);
+			ksinstances[k-1].weights = Array.ConvertAll (weightsS.Substring (1, weightsS.Length - 2).Split (','), int.Parse);
 
-			textLineN = 3;
-			ksinstances[k-1].profit = int.Parse (KPInstanceText [textLineN]);
+			ksinstances[k-1].values = Array.ConvertAll (valuesS.Substring (1, valuesS.Length - 2).Split (','), int.Parse);
+
+			ksinstances[k-1].capacity = int.Parse (capacityS);
+
+			ksinstances[k-1].profit = int.Parse (profitS);
+
+			dict.TryGetValue ("problemID", out ksinstances[k-1].id);
+			dict.TryGetValue ("instanceType", out ksinstances[k-1].type);
 
 		}
 			
@@ -354,6 +379,21 @@ public class GameManager : MonoBehaviour {
 					dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
 				}
 			}
+
+			using (StreamReader sr2 = new StreamReader (folderPathLoad + "param2.txt")) {
+
+				// (This loop reads every line until EOF or the first blank line.)
+				string line2;
+				while (!string.IsNullOrEmpty((line2 = sr2.ReadLine())))
+				{
+					//Debug.Log (1);
+					// Split each line around ':'
+					string[] tmp = line2.Split(new char[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+					// Add the key-value pair to the dictionary:
+					dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
+				}
+			}
+
 		} catch (Exception e) {
 			Debug.Log ("The file could not be read:");
 			Debug.Log (e.Message);
@@ -405,17 +445,17 @@ public class GameManager : MonoBehaviour {
 		timeOnlyItems=Convert.ToSingle (timeOnlyItemsS);
 			
 		dictionary.TryGetValue ("instanceRandomization", out instanceRandomizationS);
-
 		//If instanceRandomization is not included in the parameters file. It generates a randomization.
-		if (!dictionary.ContainsKey("instanceRandomization")){
-			RandomizeKSInstances();
-		} else{
-			int[] instanceRandomizationNo0 = Array.ConvertAll(instanceRandomizationS.Substring (1, instanceRandomizationS.Length - 2).Split (','), int.Parse);
-			instanceRandomization = new int[instanceRandomizationNo0.Length];
-			foreach (int i in instanceRandomizationNo0) {
-				instanceRandomization[i] = instanceRandomizationNo0 [i] - 1;
-			}
+//		if (!dictionary.ContainsKey("instanceRandomization")){
+//			RandomizeKSInstances();
+//		} else{
+		int[] instanceRandomizationNo0 = Array.ConvertAll(instanceRandomizationS.Substring (1, instanceRandomizationS.Length - 2).Split (','), int.Parse);
+		instanceRandomization = new int[instanceRandomizationNo0.Length];
+		//foreach (int i in instanceRandomizationNo0)
+		for (int i = 0; i < instanceRandomizationNo0.Length; i++){
+			instanceRandomization[i] = instanceRandomizationNo0 [i] - 1;
 		}
+//		}
 
 
 		////Assigns LayoutParameters
