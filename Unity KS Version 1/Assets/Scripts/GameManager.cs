@@ -69,8 +69,10 @@ public class GameManager : MonoBehaviour {
 	//The order of the left/right No/Yes randomization
 	public static int[] buttonRandomization;
 
-	//This is the string that will be used as the file name where the data is stored. Currently the date-time is used.
-	public static string participantID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
+	//This is the string that will be used as the file name where the data is stored. DeCurrently the date-time is used.
+	public static string participantID = "Empty";
+
+	public static string dateID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
 	//Is the question shown on scene scene 1?
 	private static int questionOn;
@@ -97,6 +99,8 @@ public class GameManager : MonoBehaviour {
 
 		public string id;
 		public string type;
+
+		public int solution;
 	}
 
 	//An array of all the instances to be uploaded form .txt files.
@@ -203,19 +207,35 @@ public class GameManager : MonoBehaviour {
 		//Get the instance n umber for this trial and add 1 because the instanceRandomization is linked to array numbering in C#, which starts at 0;
 		int instanceNum = instanceRandomization [trial + (block - 1) * numberOfTrials - 1] + 1;
 
-		string dataTrialText = block + ";" + trial + ";" + answer + ";" + timeSpent + ";" + randomYes +";" + instanceNum + ";" + xyCoordinates + ";" + error; 
+		int solutionQ = ksinstances [instanceNum - 1].solution;
+		int correct = (solutionQ == answer) ? 1 : 0;
+
+		if (correct != 1) {
+			instance.playSound ();
+		}
+
+		string dataTrialText = block + ";" + trial + ";" + answer + ";" + correct + ";" + timeSpent + ";" + randomYes +";" + instanceNum + ";" + xyCoordinates + ";" + error; 
 
 		string[] lines = {dataTrialText};
 		string folderPathSave = Application.dataPath + outputFolder;
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID+".txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID +".txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		} 
 
 		//Options of streamwriter include: Write, WriteLine, WriteAsync, WriteLineAsync
+	}
+
+	private void playSound(){
+
+		//int samplerate = 44100;
+		//AudioClip myClip = AudioClip.Create("MySinusoid", samplerate * 2, 1, samplerate, true);
+		AudioSource aud = GetComponent<AudioSource>();
+		//aud.clip = myClip;
+		aud.Play();
 	}
 		
 	/// <summary>
@@ -230,7 +250,7 @@ public class GameManager : MonoBehaviour {
 		string folderPathSave = Application.dataPath + outputFolder;
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-TimeStamps.txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID + "-TimeStamps.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		} 
@@ -251,14 +271,14 @@ public class GameManager : MonoBehaviour {
 			//lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ());
 			//With instance type and problem ID
 			lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ())
-				+ ";id=" + ks.id + ";type=" + ks.type;
+				+ ";id=" + ks.id + ";type=" + ks.type + ";sol=" + ks.solution;
 			l++;
 			ksn++;
 		}
-		lines [l] = "block;trial;answer;timeSpent;randomYes(1=Left:No/Right:Yes);instanceNumber;xyCoordinates";
+		lines [l] = "block;trial;answer;correct;timeSpent;randomYes(1=Left:No/Right:Yes);instanceNumber;xyCoordinates";
 
 		string folderPathSave = Application.dataPath + outputFolder;
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID+".txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID + ".txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		}
@@ -268,7 +288,7 @@ public class GameManager : MonoBehaviour {
 		lines1[1] = "InitialTimeStamp:" + initialTimeStamp;
 		lines1[2]="1:ItemsNoQuestion;11:ItemsWithQuestion;2:AnswerScreen;21:ParticipantsAnswer;3:InterTrialScreen;4:InterBlockScreen;5:EndScreen";
 		lines1[3]="block;trial;eventType;elapsedTime"; 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-TimeStamps.txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID + "-TimeStamps.txt",true)) {
 			foreach (string line in lines1)
 				outputFile.WriteLine(line);
 		}
@@ -324,11 +344,13 @@ public class GameManager : MonoBehaviour {
 			string valuesS;
 			string capacityS;
 			string profitS;
+			string solutionS;
 
 			dict.TryGetValue ("weights", out weightsS);
 			dict.TryGetValue ("values", out valuesS);
 			dict.TryGetValue ("capacity", out capacityS);
 			dict.TryGetValue ("profit", out profitS);
+			dict.TryGetValue ("solution", out solutionS);
 
 			ksinstances[k-1].weights = Array.ConvertAll (weightsS.Substring (1, weightsS.Length - 2).Split (','), int.Parse);
 
@@ -337,6 +359,8 @@ public class GameManager : MonoBehaviour {
 			ksinstances[k-1].capacity = int.Parse (capacityS);
 
 			ksinstances[k-1].profit = int.Parse (profitS);
+
+			ksinstances[k-1].solution = int.Parse (solutionS);
 
 			dict.TryGetValue ("problemID", out ksinstances[k-1].id);
 			dict.TryGetValue ("instanceType", out ksinstances[k-1].type);
@@ -629,7 +653,8 @@ public class GameManager : MonoBehaviour {
 				saveTimeStamp(11);
 				questionOn = 1;
 			} else {
-				changeToNextScene(2,BoardManager.randomYes);
+				//changeToNextScene(2,BoardManager.randomYes);
+				changeToNextScene(BoardManager.answer,BoardManager.randomYes);
 			}
 
 		}

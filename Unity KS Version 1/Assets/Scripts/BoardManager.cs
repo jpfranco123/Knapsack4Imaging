@@ -48,6 +48,10 @@ public class BoardManager : MonoBehaviour {
 	//1: No/Yes 0: Yes/No
 	public static int randomYes;//=Random.Range(0,2);
 
+	//The answer Input by the player
+	//0:No / 1:Yes / 2:None
+	public static int answer;
+
 	private String question;
 
 	//Should the key be working?
@@ -307,6 +311,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	/// Macro function that initializes the Board
+	/// 1: Trial / 2: trial game answer
 	public void SetupScene(int sceneToSetup)
 	{
 
@@ -341,6 +346,8 @@ public class BoardManager : MonoBehaviour {
 			}
 
 		} else if(sceneToSetup ==2){
+			
+			answer = 2;
 			setKSInstance ();
 			//setQuestion ();
 			RandomizeButtons ();
@@ -399,18 +406,35 @@ public class BoardManager : MonoBehaviour {
 			if (randomYes == 1) {
 				if (Input.GetKeyDown (KeyCode.A)) {
 					//Left
-					GameManager.changeToNextScene (0, randomYes);
+					//GameManager.changeToNextScene (0, randomYes);
+					keysON = false;
+					answer=0;
+					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
+					highlightButton(boto);
+
 				} else if (Input.GetKeyDown (KeyCode.G)) {
 					//Right
-					GameManager.changeToNextScene (1, randomYes);
+					//GameManager.changeToNextScene (1, randomYes);
+					keysON = false;
+					answer=1;
+					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
+					highlightButton(boto);
 				}
 			} else if (randomYes == 0) {
 				if (Input.GetKeyDown (KeyCode.A)) {
 					//Left
-					GameManager.changeToNextScene (1, randomYes);
+					//GameManager.changeToNextScene (1, randomYes);
+					keysON = false;
+					answer=1;
+					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
+					highlightButton(boto);
 				} else if (Input.GetKeyDown (KeyCode.G)) {
 					//Right
-					GameManager.changeToNextScene (0, randomYes);
+					//GameManager.changeToNextScene (0, randomYes);
+					keysON = false;
+					answer = 0;
+					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
+					highlightButton(boto);
 				}
 			}
 		} else if (GameManager.escena == 0) {
@@ -419,6 +443,13 @@ public class BoardManager : MonoBehaviour {
 				GameManager.changeToNextScene (2, -2);
 			}
 		}
+	}
+
+	private void highlightButton(GameObject butt){
+		Text texto = butt.GetComponentInChildren<Text> ();
+		texto.color = Color.gray;
+
+
 	}
 
 	public void setupInitialScreen(){

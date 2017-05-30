@@ -1,6 +1,6 @@
 This file explains the input parameters that must be passed In the input files.
 
-Input Files: param.txt, layoutParam.txt, KPInstances/i1.txt…
+Input Files: param.txt, param2.txt, layoutParam.txt, KPInstances/i1.txt…
 
 The main structure of these files is: 
 NameOfTheVariable1:Value1
@@ -26,6 +26,9 @@ timeRest2:=Time for the inter-blocks Break.
 timeTrial:=Time given for each trial (The total time the items are shown -With and without 	the question-).
 timeOnlyItems:=Time in which the items are shown without the question. It should be less than 	timeTrial.
 timeAnswer:=Time given to answer.
+
+param2.txt 
+Variables can be allocated between param.txt and param2.txt with no effect on the game; however there must not be repeated definitions of variables. The distinction is done because param2.txt is an output from the instance selection program (e.g python).
 numberOfInstances:=Number of instances to be imported. The files uploaded are 			automatically i1-i”numberOfInstances”
 numberOfBlocks:=Number of blocks.
 numberOfTrials:=Number of trials in each block.
@@ -35,12 +38,12 @@ instanceRandomization:=Sequence of instances to be randomised. The vector must h
 KPInstances/i1.txt,KPInstances/i2.txt,…
 Instance information. Each file is a different instance of the Knapsack problem. 
 Files must be added sequentially (i.e. 1,2,3,…). All Variables must be INTEGERS or vectors of INTEGERS.
-Weights and values must be vectors with the same length. Sample Instance:
+Weights and values must be vectors with the same length. InstanceType should be allocated according to one of the levels of difficulty. Sample Instance:
 
-weights:[12,15,28,10,6,12,43]
-values:[10,98,3,19,11,20,30]
-capacity:15
-profit:16
-
-
+weights:[17,18,9,14,15,15]
+values:[14,11,14,5,14,10]
+capacity:48
+profit:46
+problemID:93-0.44-0.6
+instanceType:1
 

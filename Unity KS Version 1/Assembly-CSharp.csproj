@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_0;UNITY_5_6;UNITY_5;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_0;UNITY_5_6;UNITY_5;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -54,7 +54,7 @@
      <None Include="Assets\DATAinf\Input\KPInstances\i4.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i6.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i18.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i38.txt" />
+     <None Include="Assets\DATAinf\Input\KPInstances\i29.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i36.txt" />
      <None Include="Assets\DATAinf\Input\templates\param.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i24.txt" />
@@ -62,58 +62,34 @@
      <None Include="Assets\DATAinf\Input\param.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i11.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i20.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i57.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i53.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i50.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i60.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i3.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i47.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i45.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i39.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i19.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i34.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i59.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i46.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i58.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i43.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i41.txt" />
      <None Include="Assets\DATAinf\Input\param2.txt" />
      <None Include="Assets\DATAinf\Input\templates\i1.txt" />
      <None Include="Assets\DATAinf\Input\templates\layoutParam.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i29.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i54.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i30.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i17.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i21.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i16.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i42.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i22.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i49.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i32.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i28.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i15.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i52.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i51.txt" />
+     <None Include="Assets\DATAinf\Input\KPInstances\i17.txt" />
      <None Include="Assets\DATAinf\Input\INPUT Information.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i13.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i14.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i37.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i33.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i55.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i7.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i31.txt" />
      <None Include="Assets\DATAinf\Input\templates\param2.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i23.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i10.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i44.txt" />
      <None Include="Assets\DATAinf\Input\layoutParam.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i48.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i9.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i27.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i56.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i26.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i12.txt" />
-     <None Include="Assets\DATAinf\Input\KPInstances\i40.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i2.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i35.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i5.txt" />

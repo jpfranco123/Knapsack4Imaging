@@ -1,7 +1,0 @@
-resolutionWidth:800
-resolutionHeight:600
-columns:16
-rows:12
-timerWidth:400
-totalAreaBill:8
-totalAreaWeight:8

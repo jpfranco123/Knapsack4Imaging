@@ -1,6 +1,0 @@
-weights:[7,18,10,17,16,6,8]
-values:[18,16,17,12,6,11,5]
-capacity:43
-profit:28
-problemID:12-0.4-0.16
-instanceType:6
