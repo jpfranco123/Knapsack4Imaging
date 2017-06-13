@@ -74,6 +74,8 @@ public class GameManager : MonoBehaviour {
 
 	public static string dateID = @System.DateTime.Now.ToString("dd MMMM, yyyy, HH-mm");
 
+	private static string identifierName;
+
 	//Is the question shown on scene scene 1?
 	private static int questionOn;
 
@@ -221,7 +223,7 @@ public class GameManager : MonoBehaviour {
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID +".txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName +"TrialInfo.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		} 
@@ -250,7 +252,7 @@ public class GameManager : MonoBehaviour {
 		string folderPathSave = Application.dataPath + outputFolder;
 
 		//This location can be used by unity to save a file if u open the game in any platform/computer:      Application.persistentDataPath;
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID + "-TimeStamps.txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		} 
@@ -262,6 +264,9 @@ public class GameManager : MonoBehaviour {
 	/// In the TimeStamp file it saves: 1. The participant ID. 2.The time onset of the stopwatch from which the time stamps are measured. 3. the event types description.
 	/// </summary>
 	private static void saveHeaders(){
+
+		identifierName = participantID + "_" + dateID + "_" + "Dec" + "_";
+
 		string[] lines = new string[numberOfInstances+2];
 		lines[0]="PartcipantID:" + participantID;
 		int l = 1;
@@ -278,7 +283,7 @@ public class GameManager : MonoBehaviour {
 		lines [l] = "block;trial;answer;correct;timeSpent;randomYes(1=Left:No/Right:Yes);instanceNumber;xyCoordinates";
 
 		string folderPathSave = Application.dataPath + outputFolder;
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID + ".txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TrialInfo.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		}
@@ -288,7 +293,7 @@ public class GameManager : MonoBehaviour {
 		lines1[1] = "InitialTimeStamp:" + initialTimeStamp;
 		lines1[2]="1:ItemsNoQuestion;11:ItemsWithQuestion;2:AnswerScreen;21:ParticipantsAnswer;3:InterTrialScreen;4:InterBlockScreen;5:EndScreen";
 		lines1[3]="block;trial;eventType;elapsedTime"; 
-		using (StreamWriter outputFile = new StreamWriter(folderPathSave + participantID + "-" + dateID + "-TimeStamps.txt",true)) {
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) {
 			foreach (string line in lines1)
 				outputFile.WriteLine(line);
 		}
