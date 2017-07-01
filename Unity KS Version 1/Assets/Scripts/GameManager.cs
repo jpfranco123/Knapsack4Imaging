@@ -89,6 +89,8 @@ public class GameManager : MonoBehaviour {
 	// Time at which the stopwatch started. Time of each event is calculated according to this moment.
 	private static string initialTimeStamp;
 
+	private static bool soundON =false;
+
 
 	//A structure that contains the parameters of each instance
 	public struct KSInstance
@@ -232,12 +234,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void playSound(){
-
-		//int samplerate = 44100;
-		//AudioClip myClip = AudioClip.Create("MySinusoid", samplerate * 2, 1, samplerate, true);
-		AudioSource aud = GetComponent<AudioSource>();
-		//aud.clip = myClip;
-		aud.Play();
+		if (soundON) {
+			//int samplerate = 44100;
+			//AudioClip myClip = AudioClip.Create("MySinusoid", samplerate * 2, 1, samplerate, true);
+			AudioSource aud = GetComponent<AudioSource> ();
+			//aud.clip = myClip;
+			aud.Play ();
+		}
 	}
 		
 	/// <summary>
@@ -266,28 +269,37 @@ public class GameManager : MonoBehaviour {
 	private static void saveHeaders(){
 
 		identifierName = participantID + "_" + dateID + "_" + "Dec" + "_";
+		string folderPathSave = Application.dataPath + outputFolder;
 
-		string[] lines = new string[numberOfInstances+2];
-		lines[0]="PartcipantID:" + participantID;
+		string[] lines3 = new string[numberOfInstances+1];
+		lines3[0]="PartcipantID:" + participantID;
 		int l = 1;
 		int ksn = 1;
 		foreach (KSInstance ks in ksinstances) {
 			//Without instance type and problem ID:
 			//lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ());
 			//With instance type and problem ID
-			lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ())
+			lines3 [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ())
 				+ ";id=" + ks.id + ";type=" + ks.type + ";sol=" + ks.solution;
 			l++;
 			ksn++;
 		}
-		lines [l] = "block;trial;answer;correct;timeSpent;randomYes(1=Left:No/Right:Yes);instanceNumber;xyCoordinates";
+		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "InstancesInfo.txt",true)) {
+			foreach (string line in lines3)
+				outputFile.WriteLine(line);
+		}
 
-		string folderPathSave = Application.dataPath + outputFolder;
+
+		// Trial Info file headers
+		string[] lines = new string[2];
+		lines[0]="PartcipantID:" + participantID;
+		lines [1] = "block;trial;answer;correct;timeSpent;randomYes(1=Left:No/Right:Yes);instanceNumber;xyCoordinates;error";
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TrialInfo.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
 		}
 
+		// Time Stamps file headers
 		string[] lines1 = new string[4];
 		lines1[0]="PartcipantID:" + participantID;
 		lines1[1] = "InitialTimeStamp:" + initialTimeStamp;
