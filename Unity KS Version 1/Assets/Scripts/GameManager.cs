@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour {
 	//Current Scene
 	public static int escena;
 
-	//Time spent so far on this scene 
+	//Time spent so far on this scene
 	public static float tiempo;
 
 	//Total time for these scene
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour {
 
 
 	//Modifiable Variables:
-	//Minimum and maximum for randomized interperiod Time 
+	//Minimum and maximum for randomized interperiod Time
 	public static float timeRest1min=5;
 	public static float timeRest1max=9;
 
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour {
 
 		DontDestroyOnLoad (gameObject);
 
-		//Initializes the game		
+		//Initializes the game
 		boardScript = instance.GetComponent<BoardManager> ();
 
 		InitGame();
@@ -191,15 +191,30 @@ public class GameManager : MonoBehaviour {
 		}
 
 	}
-		
+
 	// Update is called once per frame
 	void Update () {
 
 		if (escena != 0) {
 			startTimer ();
+			pauseManager ();
 		}
 	}
-		
+
+	//To pause press alt+p
+	//Pauses/Unpauses the game. Unpausing take syou directly to next trial
+	//Warning! When Unpausing the following happens:
+	//If paused/unpaused in scene 1 or 2 (while items are shown or during answer time) then saves the trialInfo with an error: "pause" without information on the items selected.
+	//If paused/unpaused on ITI or IBI then it generates a new row in trial Info with an error ("pause"). i.e. there are now 2 rows for the trial.
+	private void pauseManager(){
+		if (( Input.GetKey (KeyCode.LeftAlt) || Input.GetKey (KeyCode.RightAlt)) && Input.GetKeyDown (KeyCode.P) ){
+			Time.timeScale = (Time.timeScale == 1) ? 0 : 1;
+			if(Time.timeScale==1){
+				errorInScene("Pause");
+			}
+		}
+	}
+
 	//Saves the data of a trial to a .txt file with the participants ID as filename using StreamWriter.
 	//If the file doesn't exist it creates it. Otherwise it adds on lines to the existing file.
 	//Each line in the File has the following structure: "trial;answer;timeSpent".
@@ -218,7 +233,7 @@ public class GameManager : MonoBehaviour {
 			instance.playSound ();
 		}
 
-		string dataTrialText = block + ";" + trial + ";" + answer + ";" + correct + ";" + timeSpent + ";" + randomYes +";" + instanceNum + ";" + xyCoordinates + ";" + error; 
+		string dataTrialText = block + ";" + trial + ";" + answer + ";" + correct + ";" + timeSpent + ";" + randomYes +";" + instanceNum + ";" + xyCoordinates + ";" + error;
 
 		string[] lines = {dataTrialText};
 		string folderPathSave = Application.dataPath + outputFolder;
@@ -228,7 +243,7 @@ public class GameManager : MonoBehaviour {
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName +"TrialInfo.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
-		} 
+		}
 
 		//Options of streamwriter include: Write, WriteLine, WriteAsync, WriteLineAsync
 	}
@@ -242,14 +257,14 @@ public class GameManager : MonoBehaviour {
 			aud.Play ();
 		}
 	}
-		
+
 	/// <summary>
 	/// Saves the time stamp for a particular event type to the "TimeStamps" File
 	/// </summary>
 	/// Event type: 1=ItemsNoQuestion;11=ItemsWithQuestion;2=AnswerScreen;21=ParticipantsAnswer;3=InterTrialScreen;4=InterBlockScreen;5=EndScreen
 	public static void saveTimeStamp(int eventType) {
 
-		string dataTrialText = block + ";" + trial + ";" + eventType + ";" + timeStamp(); 
+		string dataTrialText = block + ";" + trial + ";" + eventType + ";" + timeStamp();
 
 		string[] lines = {dataTrialText};
 		string folderPathSave = Application.dataPath + outputFolder;
@@ -258,7 +273,7 @@ public class GameManager : MonoBehaviour {
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) {
 			foreach (string line in lines)
 				outputFile.WriteLine(line);
-		} 
+		}
 	}
 
 	/// <summary>
@@ -271,16 +286,17 @@ public class GameManager : MonoBehaviour {
 		identifierName = participantID + "_" + dateID + "_" + "Dec" + "_";
 		string folderPathSave = Application.dataPath + outputFolder;
 
-		string[] lines3 = new string[numberOfInstances+1];
+		string[] lines3 = new string[numberOfInstances+2];
 		lines3[0]="PartcipantID:" + participantID;
-		int l = 1;
+		lines3 [1] = "Instance" + ";c"  + ";p" + ";w" + ";v" + ";id" + ";type" + ";sol";
+		int l = 2;
 		int ksn = 1;
 		foreach (KSInstance ks in ksinstances) {
 			//Without instance type and problem ID:
 			//lines [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ());
 			//With instance type and problem ID
-			lines3 [l] = "Instance:" + ksn + ";c=" + ks.capacity + ";p=" + ks.profit + ";w=" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";v=" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ())
-				+ ";id=" + ks.id + ";type=" + ks.type + ";sol=" + ks.solution;
+			lines3 [l] = ksn + ";" + ks.capacity + ";" + ks.profit + ";" + string.Join (",", ks.weights.Select (p => p.ToString ()).ToArray ()) + ";" + string.Join (",", ks.values.Select (p => p.ToString ()).ToArray ())
+				+ ";" + ks.id + ";" + ks.type + ";" + ks.solution;
 			l++;
 			ksn++;
 		}
@@ -304,7 +320,7 @@ public class GameManager : MonoBehaviour {
 		lines1[0]="PartcipantID:" + participantID;
 		lines1[1] = "InitialTimeStamp:" + initialTimeStamp;
 		lines1[2]="1:ItemsNoQuestion;11:ItemsWithQuestion;2:AnswerScreen;21:ParticipantsAnswer;3:InterTrialScreen;4:InterBlockScreen;5:EndScreen";
-		lines1[3]="block;trial;eventType;elapsedTime"; 
+		lines1[3]="block;trial;eventType;elapsedTime";
 		using (StreamWriter outputFile = new StreamWriter(folderPathSave + identifierName + "TimeStamps.txt",true)) {
 			foreach (string line in lines1)
 				outputFile.WriteLine(line);
@@ -316,13 +332,13 @@ public class GameManager : MonoBehaviour {
 
 	/*
 	 * Loads all of the instances to be uploaded form .txt files. Example of input file:
-	 * Name of the file: i3.txt 
+	 * Name of the file: i3.txt
 	 * Structure of each file is the following:
 	 * weights:[2,5,8,10,11,12]
 	 * values:[10,8,3,9,1,4]
 	 * capacity:15
 	 * profit:16
-	 * 
+	 *
 	 * The instances are stored as ksinstances structures in the array of structures: ksinstances
 	 */
 	public static void loadKPInstance(){
@@ -383,7 +399,7 @@ public class GameManager : MonoBehaviour {
 			dict.TryGetValue ("instanceType", out ksinstances[k-1].type);
 
 		}
-			
+
 	}
 
 	//Loads the parameters form the text files: param.txt and layoutParam.txt
@@ -405,7 +421,7 @@ public class GameManager : MonoBehaviour {
 					dict.Add(tmp[0], tmp[1]);//int.Parse(dict[tmp[1]]);
 				}
 			}
-				
+
 
 			using (StreamReader sr1 = new StreamReader (folderPathLoad + "param.txt")) {
 
@@ -441,7 +457,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		assignVariables(dict);
-				
+
 	}
 
 	//Assigns the parameters in the dictionary to variables
@@ -484,7 +500,7 @@ public class GameManager : MonoBehaviour {
 		numberOfBlocks=Int32.Parse(numberOfBlocksS);
 		numberOfInstances=Int32.Parse(numberOfInstancesS);
 		timeOnlyItems=Convert.ToSingle (timeOnlyItemsS);
-			
+
 		dictionary.TryGetValue ("instanceRandomization", out instanceRandomizationS);
 		//If instanceRandomization is not included in the parameters file. It generates a randomization.
 //		if (!dictionary.ContainsKey("instanceRandomization")){
@@ -592,7 +608,7 @@ public class GameManager : MonoBehaviour {
 		} else if (escena == 4) {
 			SceneManager.LoadScene (1);
 		}
-			
+
 	}
 
 	//Redirects to the next scene depending if the trials or blocks are over.
@@ -634,7 +650,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Calculates time elapsed 
+	/// Calculates time elapsed
 	/// </summary>
 	/// <returns>The time elapsed in milliseconds since the "setTimeStamp()".</returns>
 	private static string timeStamp(){
@@ -649,7 +665,7 @@ public class GameManager : MonoBehaviour {
 
 
 	//Updates the timer (including the graphical representation)
-	//If time runs out in the trial or the break scene. It switches to the next scene. 
+	//If time runs out in the trial or the break scene. It switches to the next scene.
 	void startTimer(){
 		tiempo -= Time.deltaTime;
 		//Debug.Log (tiempo);
@@ -661,7 +677,7 @@ public class GameManager : MonoBehaviour {
 
 		//When the time runs out:
 		if(tiempo < 0)
-		{	
+		{
 			if (escena == 1 && questionOn == 0) {
 				//After showing only the items do not change to next scene. Just show the question.
 				totalTime = timeTrial - timeOnlyItems;
