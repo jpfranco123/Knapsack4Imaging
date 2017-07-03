@@ -57,14 +57,18 @@
      <None Include="Assets\DATAinf\Input\KPInstances\i29.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i36.txt" />
      <None Include="Assets\DATAinf\Input\templates\param.txt" />
+     <None Include="Assets\DATAinf\Output\jfadjsh_01 July, 2017, 19-14_Dec_InstancesInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i24.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i25.txt" />
      <None Include="Assets\DATAinf\Input\param.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i11.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i20.txt" />
+     <None Include="Assets\DATAinf\Output\hades_01 July, 2017, 19-20_Dec_TrialInfo.txt" />
+     <None Include="Assets\DATAinf\Output\hades_01 July, 2017, 19-20_Dec_InstancesInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i3.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i19.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i34.txt" />
+     <None Include="Assets\DATAinf\Output\hades_01 July, 2017, 19-20_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\param2.txt" />
      <None Include="Assets\DATAinf\Input\templates\i1.txt" />
      <None Include="Assets\DATAinf\Input\templates\layoutParam.txt" />
@@ -73,6 +77,7 @@
      <None Include="Assets\DATAinf\Input\KPInstances\i16.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i22.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i32.txt" />
+     <None Include="Assets\DATAinf\Output\jfadjsh_01 July, 2017, 19-14_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i28.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i15.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i17.txt" />
@@ -80,6 +85,7 @@
      <None Include="Assets\DATAinf\Input\KPInstances\i13.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i14.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i33.txt" />
+     <None Include="Assets\DATAinf\Output\jfadjsh_01 July, 2017, 19-14_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i7.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i31.txt" />
      <None Include="Assets\DATAinf\Input\templates\param2.txt" />
