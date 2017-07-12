@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour {
 
 	private static bool showTimer;
 
-
 	//Modifiable Variables:
 	//Minimum and maximum for randomized interperiod Time
 	public static float timeRest1min=5;
@@ -113,7 +112,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 
-		//Makes the Gama manager a Singleton
+		//Makes the Game manager a Singleton
 		if (instance == null) {
 			instance = this;
 		}
@@ -546,14 +545,13 @@ public class GameManager : MonoBehaviour {
 		//BoardManager.KSItemRadius=Convert.ToSingle(KSItemRadiusS);//Int32.Parse(KSItemRadiusS);
 	}
 
-
+	//66: Wrong function: items are repeated.
 	//Randomizes the sequence of Instances to be shown to the participant adn stores it in: instanceRandomization
 	void RandomizeKSInstances(){
 		instanceRandomization = new int[numberOfTrials*numberOfBlocks];
 		for (int i = 0; i < numberOfTrials*numberOfBlocks; i++) {
 				instanceRandomization[i] = Random.Range(0,numberOfInstances);
 		}
-
 	}
 
 	//Randomizes The Location of the Yes/No button for a whole block.

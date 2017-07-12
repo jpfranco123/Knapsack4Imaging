@@ -48,7 +48,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\BoardManager.cs" />
      <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\player.cs" />
      <None Include="Assets\DATAinf\Input\KPInstances\i8.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i1.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i4.txt" />
@@ -70,6 +69,7 @@
      <None Include="Assets\DATAinf\Input\KPInstances\i34.txt" />
      <None Include="Assets\DATAinf\Output\hades_01 July, 2017, 19-20_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\param2.txt" />
+     <None Include="Assets\DATAinf\Output\benepl_05 July, 2017, 14-30_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Input\templates\i1.txt" />
      <None Include="Assets\DATAinf\Input\templates\layoutParam.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i30.txt" />
@@ -91,9 +91,11 @@
      <None Include="Assets\DATAinf\Input\templates\param2.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i23.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i10.txt" />
+     <None Include="Assets\DATAinf\Output\benepl_05 July, 2017, 14-30_Dec_InstancesInfo.txt" />
      <None Include="Assets\DATAinf\Input\layoutParam.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i9.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i27.txt" />
+     <None Include="Assets\DATAinf\Output\benepl_05 July, 2017, 14-30_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i26.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i12.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i2.txt" />

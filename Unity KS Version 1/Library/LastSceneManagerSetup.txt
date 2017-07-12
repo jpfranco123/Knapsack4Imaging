@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_scenes/Setup.unity
+- path: Assets/_scenes/trialGame.unity
   isLoaded: 1
   isActive: 1
