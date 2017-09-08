@@ -59,11 +59,13 @@
      <None Include="Assets\DATAinf\Output\jfadjsh_01 July, 2017, 19-14_Dec_InstancesInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i24.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i25.txt" />
+     <None Include="Assets\DATAinf\Output\sdsa_03 September, 2017, 19-17_Dec_InstancesInfo.txt" />
      <None Include="Assets\DATAinf\Input\param.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i11.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i20.txt" />
      <None Include="Assets\DATAinf\Output\hades_01 July, 2017, 19-20_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Output\hades_01 July, 2017, 19-20_Dec_InstancesInfo.txt" />
+     <None Include="Assets\DATAinf\Output\AyyyQCOSA_01 September, 2017, 15-01_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i3.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i19.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i34.txt" />
@@ -71,16 +73,22 @@
      <None Include="Assets\DATAinf\Input\param2.txt" />
      <None Include="Assets\DATAinf\Output\benepl_05 July, 2017, 14-30_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Input\templates\i1.txt" />
+     <None Include="Assets\DATAinf\Output\AyyyQCOSA_01 September, 2017, 15-01_Dec_InstancesInfo.txt" />
+     <None Include="Assets\DATAinf\Output\hgfhg_03 September, 2017, 19-44_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\templates\layoutParam.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i30.txt" />
+     <None Include="Assets\DATAinf\Output\sdsa_03 September, 2017, 19-17_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i21.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i16.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i22.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i32.txt" />
      <None Include="Assets\DATAinf\Output\jfadjsh_01 July, 2017, 19-14_Dec_TimeStamps.txt" />
+     <None Include="Assets\DATAinf\Output\hgfhg_03 September, 2017, 19-44_Dec_InstancesInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i28.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i15.txt" />
+     <None Include="Assets\DATAinf\Output\AyyyQCOSA_01 September, 2017, 15-01_Dec_TimeStamps.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i17.txt" />
+     <None Include="Assets\DATAinf\Output\hgfhg_03 September, 2017, 19-44_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Input\INPUT Information.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i13.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i14.txt" />
@@ -100,6 +108,7 @@
      <None Include="Assets\DATAinf\Input\KPInstances\i12.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i2.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i35.txt" />
+     <None Include="Assets\DATAinf\Output\sdsa_03 September, 2017, 19-17_Dec_TrialInfo.txt" />
      <None Include="Assets\DATAinf\Input\KPInstances\i5.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

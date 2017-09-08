@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour {
 	//Time spent so far on this scene
 	public static float tiempo;
 
+	//Some of the following parameters are a default to be used if they are not specified in the input files.
+	//Otherwise they are rewritten (see loadParameters() )
 	//Total time for these scene
 	public static float totalTime;
 
@@ -31,6 +33,9 @@ public class GameManager : MonoBehaviour {
 
 	//Current block initialization
 	public static int block = 0;
+
+	//Total trial (As if no blocks were used)
+	public static int generalTrial=0;
 
 	private static bool showTimer;
 
@@ -75,7 +80,7 @@ public class GameManager : MonoBehaviour {
 
 	private static string identifierName;
 
-	//Is the question shown on scene scene 1?
+	//Is the question shown on scene 1?
 	private static int questionOn;
 
 	//Input and Outout Folders with respect to the Application.dataPath;
@@ -160,6 +165,7 @@ public class GameManager : MonoBehaviour {
 
 		} else if (escena == 1) {
 			trial++;
+			generalTrial = trial + (block - 1) * numberOfTrials;
 			showTimer = true;
 			boardScript.SetupScene (1);
 
@@ -223,7 +229,7 @@ public class GameManager : MonoBehaviour {
 		string xyCoordinates = BoardManager.getItemCoordinates ();
 
 		//Get the instance n umber for this trial and add 1 because the instanceRandomization is linked to array numbering in C#, which starts at 0;
-		int instanceNum = instanceRandomization [trial + (block - 1) * numberOfTrials - 1] + 1;
+		int instanceNum = instanceRandomization [generalTrial - 1] + 1;
 
 		int solutionQ = ksinstances [instanceNum - 1].solution;
 		int correct = (solutionQ == answer) ? 1 : 0;
@@ -285,6 +291,8 @@ public class GameManager : MonoBehaviour {
 		identifierName = participantID + "_" + dateID + "_" + "Dec" + "_";
 		string folderPathSave = Application.dataPath + outputFolder;
 
+
+		//Saves InstanceInfo
 		string[] lines3 = new string[numberOfInstances+2];
 		lines3[0]="PartcipantID:" + participantID;
 		lines3 [1] = "instanceNumber" + ";c"  + ";p" + ";w" + ";v" + ";id" + ";type" + ";sol";
@@ -598,7 +606,7 @@ public class GameManager : MonoBehaviour {
 				save (answer, timeTrial, randomYes, "");
 			} else {
 				save (answer, timeAnswer - tiempo, randomYes, "");
-				saveTimeStamp (21);
+				//saveTimeStamp (21);
 			}
 			SceneManager.LoadScene (3);
 		} else if (escena == 3) {

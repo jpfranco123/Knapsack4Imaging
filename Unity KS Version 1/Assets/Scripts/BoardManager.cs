@@ -160,7 +160,7 @@ public class BoardManager : MonoBehaviour {
 	//2. The weight and value vectors are uploaded
 	//3. The instance prefab is uploaded
 	void setKSInstance(){
-		int randInstance = GameManager.instanceRandomization[GameManager.trial-1];
+		int randInstance = GameManager.instanceRandomization[GameManager.generalTrial-1];
 
 //		Text Quest = GameObject.Find("Question").GetComponent<Text>();
 //		String question = "Can you obtain at least $" + GameManager.ksinstances[randInstance].profit + " with at most " + GameManager.ksinstances[randInstance].capacity +"kg?";
@@ -409,6 +409,7 @@ public class BoardManager : MonoBehaviour {
 					//GameManager.changeToNextScene (0, randomYes);
 					keysON = false;
 					answer=0;
+					GameManager.saveTimeStamp (21);
 					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
 					highlightButton(boto);
 
@@ -417,6 +418,7 @@ public class BoardManager : MonoBehaviour {
 					//GameManager.changeToNextScene (1, randomYes);
 					keysON = false;
 					answer=1;
+					GameManager.saveTimeStamp (21);
 					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
 					highlightButton(boto);
 				}
@@ -426,6 +428,7 @@ public class BoardManager : MonoBehaviour {
 					//GameManager.changeToNextScene (1, randomYes);
 					keysON = false;
 					answer=1;
+					GameManager.saveTimeStamp (21);
 					GameObject boto = GameObject.Find("LEFTbutton") as GameObject;
 					highlightButton(boto);
 				} else if (Input.GetKeyDown (KeyCode.G)) {
@@ -433,6 +436,7 @@ public class BoardManager : MonoBehaviour {
 					//GameManager.changeToNextScene (0, randomYes);
 					keysON = false;
 					answer = 0;
+					GameManager.saveTimeStamp (21);
 					GameObject boto = GameObject.Find("RIGHTbutton") as GameObject;
 					highlightButton(boto);
 				}
